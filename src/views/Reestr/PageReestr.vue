@@ -1,13 +1,22 @@
 <template>
   <div class="reestr">
-    <b-form-group class="reestr__table_filter">
-      <b-input-group>
+    <div class="reestr__table_filter">
+      <b-input-group class="reestr__table_search">
         <b-form-input v-model="text" placeholder="Поиск" />
         <b-input-group-append>
           <b-btn variant="primary">Найти</b-btn>
         </b-input-group-append>
+        <base-period-select class="reestr__table_search_period" />
       </b-input-group>
-    </b-form-group>
+      <div>
+        <b-btn class="reestr__table_filter_btn" pill variant="success"
+          >На печать</b-btn
+        >
+        <b-btn class="reestr__table_filter_btn" pill variant="success"
+          >Сформировать реестр</b-btn
+        >
+      </div>
+    </div>
     <b-table
       hover
       striped
@@ -242,8 +251,15 @@ export default Vue.extend({
       margin-right 20px
     &_filter
       width 100%
-      flexy(flex-start,flex-start)
+      flexy(space-between,flex-start)
       margin 30px 0px
+      &_btn
+        margin 0px 10px
+    &_search
+      flexy(center,center)
+      max-width 700px
+      &_period
+        margin-left 50px !important
   &__datepicker
     width 150px !important
   &__badge
