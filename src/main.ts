@@ -4,6 +4,8 @@ import router from "./router";
 import store from "./store";
 
 import "./plugins/bootstrap.ts";
+import "@/assets/stylus/index.styl";
+
 Vue.config.productionTip = false;
 
 new Vue({

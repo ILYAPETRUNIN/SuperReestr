@@ -1,0 +1,230 @@
+@require '~@/assets/stylus/vars/variables';
+
+/* Headings
+------------- */
+h1, h2, h3, h4, h5, h6 {
+  font: inherit;
+  margin: 0;
+}
+
+b, strong {
+  font-weight: 600;
+}
+
+.{$ns}-heading {
+  $font-weight = 600;
+
+  &--large-x {
+    font-size: $font-size-large-xx;
+    line-height: $line-height-large-x;
+    font-weight: $font-weight;
+  }
+
+  &--large {
+    font-size: $font-size-large-x;
+    line-height: $line-height-large;
+    font-weight: $font-weight;
+  }
+  &--big {
+    font-size: $font-size-big-x;
+    line-height: $line-height-big;
+    font-weight: $font-weight;
+  }
+  &--medium {
+    font-size: $font-size-medium;
+    line-height: $line-height-medium;
+    font-weight: $font-weight;
+  }
+  &--medium-s {
+    font-size: $font-size-medium-s;
+    line-height: $line-height-medium;
+    font-weight: $font-weight;
+  }
+  &--base {
+    font-size: $line-height-small-s;
+    line-height: $line-height-base;
+    font-weight: $font-weight;
+  }
+  &--small {
+    font-size: $font-size-small;
+    line-height: $line-height-small;
+    font-weight: $font-weight;
+  }
+}
+
+.{$ns}-subheading {
+  $font-weight = 500;
+
+  &--large {
+    font-size: $font-size-large;
+    line-height: $line-height-large;
+    font-weight: $font-weight;
+  }
+  &--big {
+    font-size: $font-size-big;
+    line-height: $line-height-big;
+    font-weight: $font-weight;
+  }
+  &--medium {
+    font-size: $font-size-medium;
+    line-height: $line-height-medium;
+    font-weight: $font-weight;
+  }
+  &--medium-s {
+    font-size: $font-size-medium-s;
+    line-height: $line-height-medium;
+    font-weight: $font-weight;
+  }
+  &--base {
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    font-weight: $font-weight;
+  }
+  &--base-s {
+    font-size: $font-size-base-s;
+    line-height: $line-height-base;
+    font-weight: $font-weight;
+  }
+  &--small {
+    font-size: $font-size-small;
+    line-height: $line-height-small;
+    font-weight: $font-weight;
+  }
+  &--small-x {
+    font-size: $font-size-small-s;
+    line-height: 1.4;
+    font-weight: $font-weight;
+  }
+}
+
+.{$ns}-text {
+  &--large {
+    font-size: $font-size-large;
+    line-height: $line-height-large;
+  }
+  &--big {
+    font-size: $font-size-big;
+    line-height: $line-height-big;
+  }
+  &--medium {
+    font-size: $font-size-medium;
+    line-height: $line-height-medium;
+  }
+  &--medium-s {
+    font-size: $font-size-medium-s;
+    line-height: $line-height-medium;
+  }
+  &--base {
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+  }
+  &--base-s {
+    font-size: $font-size-base-s;
+    line-height: $line-height-base;
+  }
+  &--small {
+    font-size: $font-size-small;
+    line-height: $line-height-small;
+  }
+  &--small-x {
+    font-size: $font-size-small-s;
+    line-height: $line-height-small-s;
+  }
+}
+
+.{$ns}-caps {
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.{$ns}-link {
+  cursor: pointer;
+  color: $color-tag;
+  text-decoration: none;
+  transition: color 0.3s ease, background-color 0.3s ease;
+
+  &--nostyle {
+    color: $color-default-text !important;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-tag;
+    }
+  }
+
+  &--btn {
+    background-color: $color-tag;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: $color-white !important;
+
+    &:hover {
+      background-color: $color-tag--hover;
+    }
+  }
+}
+
+.{$ns}-btn {
+  &--no-paddings {
+    padding: 0px !important;
+  }
+
+  &--nostyle {
+    background-color: transparent !important;
+
+    &:hover,
+    &:active,
+    &:before {
+      background-color: transparent !important;
+    }
+  }
+}
+
+ul {
+  margin: 15px 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin: 10px 0;
+    padding-left: 26px;
+    position: relative;
+
+    &::before {
+      content: '•';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+    }
+  }
+
+  // &.checked li:before {
+  //   content: '';
+  //   background: url('/img/check.svg') center center no-repeat;
+  //   background-size: contain;
+  // }
+
+  &.{$ns}-ul-nostyle {
+    li {
+      padding: 0;
+      margin: 15px 0;
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+.{$ns}-rub {
+  color: $color-label-light;
+  &:before {
+    content: '\00a0';
+  }
+  &::after {
+    content: '₽'
+  }
+}

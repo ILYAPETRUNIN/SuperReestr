@@ -1,8 +1,6 @@
+/* eslint-disable no-debugger, no-console */
 import axios from "axios";
 import qs from "qs";
-import router from "@/router/index";
-import store from "@/store/index";
-import ApiError from "@/services/helpers/ApiError";
 
 export default abstract class Api {
   static getAccessToken() {
@@ -28,22 +26,13 @@ export default abstract class Api {
 }
 
 // Api.apiService.interceptors.response.use(
-//   function(response) {
+//   function (response) {
 //     return response;
 //   },
-//   function(error) {
+//   function (error) {
 //     if (error.response?.status === 401) {
-//       if(Api.getRefreshToken()){
-//         store.dispatch("auth/refresh")
-//         .catch((e)=>router.push("/login-step-1"))
-//       }
-//       else router.push("/login-step-1")
+//     } else if (error.response?.status === 403) {
 //     }
-//     else if (error.response?.status === 403) {
-//       router.push("/login-step-1");
-//     }
-
-//     //store.dispatch("showApiError", new ApiError(error));
 
 //     return Promise.reject(error);
 //   }
