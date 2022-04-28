@@ -35,7 +35,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/helpers/PrintAction.js"  ],
   "exclude": [
     "node_modules"
   ]

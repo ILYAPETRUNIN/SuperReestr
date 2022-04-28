@@ -1,3 +1,5 @@
+import FormatedDate from "@/helpers/DateFormat";
+
 export interface FileConfig {
   approved: boolean;
   create: string;
@@ -30,12 +32,7 @@ export class FileDeal implements FileConfig {
   }
 
   public get date(): string {
-    const date = new Date(this.create);
-    return date.toLocaleString("ru", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return FormatedDate.getDateRu(this.create);
   }
 }
 
@@ -49,11 +46,11 @@ export interface DealConfig {
   files_order: Array<FileDeal>;
   files_ticket: Array<FileDeal>;
   files_trn: Array<FileDeal>;
-  full_amount_date: any;
+  full_amount_date: string;
   id: number;
   own_comapny: string;
   pre_amount: any;
-  pre_amount_date: Date | null;
+  pre_amount_date: string;
   summ_amount: any;
 }
 
@@ -67,11 +64,11 @@ export default class Deal implements DealConfig {
   files_order: Array<FileDeal>;
   files_ticket: Array<FileDeal>;
   files_trn: Array<FileDeal>;
-  full_amount_date: any;
+  full_amount_date: string;
   id: number;
   own_comapny: string;
   pre_amount: any;
-  pre_amount_date: Date | null;
+  pre_amount_date: string;
   summ_amount: any;
   constructor(args: DealConfig) {
     this.comment = args.comment;
@@ -89,6 +86,14 @@ export default class Deal implements DealConfig {
     this.pre_amount = args.pre_amount;
     this.pre_amount_date = args.pre_amount_date;
     this.summ_amount = args.summ_amount;
+  }
+
+  public get fullAmountDateFormat(): string {
+    return FormatedDate.getDateRu(this.full_amount_date);
+  }
+
+  public get preAmountDateFormat(): string {
+    return FormatedDate.getDateRu(this.pre_amount_date);
   }
 }
 

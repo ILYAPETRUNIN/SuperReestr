@@ -76,9 +76,6 @@ export default {
       },
     },
   },
-  mounted() {
-    console.log(this.files);
-  },
   methods: {
     openFile(file) {
       FileAction.open(file.name);

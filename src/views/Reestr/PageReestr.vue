@@ -21,7 +21,11 @@
         </div>
       </div>
       <div class="reestr__table_filter_btns">
-        <b-btn class="reestr__table_filter_btn" pill variant="success"
+        <b-btn
+          @click="print"
+          class="reestr__table_filter_btn"
+          pill
+          variant="success"
           >На печать</b-btn
         >
         <b-btn class="reestr__table_filter_btn" pill variant="success"
@@ -31,6 +35,7 @@
     </div>
 
     <b-table
+      id="reestr-table"
       hover
       striped
       class="reestr__table"
@@ -162,6 +167,7 @@ import { DealList } from "@/models/Deal";
 import Period from "@/models/types";
 
 import FileAction from "@/helpers/FileAction";
+import PrintActions from "@/helpers/PrintActions";
 
 const nameFiles = [
   "files_act",
@@ -194,9 +200,7 @@ export default Vue.extend({
       nameFiles,
     };
   },
-  mounted() {
-    console.log(demoData);
-  },
+
   methods: {
     onRowSelected(items) {
       this.selected = items;
@@ -211,9 +215,6 @@ export default Vue.extend({
       if (state) this.selectAllRows();
       else this.clearSelected();
     },
-    showFiles(files) {
-      console.log(files);
-    },
     resetFilter() {
       (this.period = { to: null, from: null }), (this.company = "");
     },
@@ -224,6 +225,36 @@ export default Vue.extend({
     },
     openLastFile(files) {
       FileAction.open(files[files.length - 1]);
+    },
+    print() {
+      let thead = [
+        "index",
+        "deal",
+        "own_comapny",
+        "company_name",
+        "pre_amount",
+        "summ_amount",
+        "preAmountDateFormat",
+        "fullAmountDateFormat",
+      ];
+
+      PrintActions.printTable({
+        headers: [
+          ...headers.filter((item) => thead.includes(item.key)),
+          { key: "preAmountDateFormat", label: "Дата предоплаты" },
+          { key: "fullAmountDateFormat", label: "Дата полной оплаты" },
+        ],
+        data: this.demoData.map((item, index) => {
+          let obj = {};
+          thead.forEach((head) => {
+            if (head == "index") {
+              obj.index = index + 1;
+              this.indexRow++;
+            } else obj[head] = item[head];
+          });
+          return obj;
+        }),
+      });
     },
   },
   computed: {
@@ -237,7 +268,6 @@ export default Vue.extend({
 <style lang="stylus">
 @require '~@/assets/stylus/vars/variables';
 @require '~@/assets/stylus/mixins/mixins';
-
 .reestr
   container(true)
   flexy(center,center,nowrap,column)
