@@ -1,5 +1,6 @@
 <template>
   <div class="baseLayout">
+    <deal-info />
     <b-tabs v-model="tabIndex">
       <b-tab
         v-for="(link, index) in links"
@@ -14,6 +15,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { DealList } from "@/models/Deal";
+
+import DealInfo from "@/components/other/DealInfo.vue";
 
 const links = [
   { name: "Сканы", to: "scans" },
@@ -26,6 +30,7 @@ const links = [
 
 export default Vue.extend({
   name: "BaseLayout",
+  components: { DealInfo },
   data() {
     return {
       links,

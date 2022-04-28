@@ -1,14 +1,26 @@
 <template>
   <div class="reestr">
     <div class="reestr__table_filter">
-      <b-input-group class="reestr__table_search">
-        <b-form-input v-model="text" placeholder="Поиск" />
-        <b-input-group-append>
-          <b-btn variant="primary">Найти</b-btn>
-        </b-input-group-append>
-        <base-period-select class="reestr__table_search_period" />
-      </b-input-group>
-      <div>
+      <div class="reestr__table_search">
+        <base-search class="reestr__table_search_text" />
+        <div class="reestr__table_search_wrapper">
+          <company-select
+            v-model="company"
+            class="reestr__table_search_company"
+          />
+          <base-period-select
+            v-model="period"
+            class="reestr__table_search_period"
+          />
+          <b-btn
+            @click="resetFilter"
+            class="reestr__table_filter_btn"
+            variant="danger"
+            >Сбросить</b-btn
+          >
+        </div>
+      </div>
+      <div class="reestr__table_filter_btns">
         <b-btn class="reestr__table_filter_btn" pill variant="success"
           >На печать</b-btn
         >
@@ -17,6 +29,7 @@
         >
       </div>
     </div>
+
     <b-table
       hover
       striped
@@ -77,102 +90,47 @@
         />
       </template>
 
-      <template #cell(comment)="{ value }">
+      <template #cell(comment)="{ value, index }">
         <b-button class="reestr__btn_badge" size="sm" variant="success" pill>
           <span>Комментировать</span>
           <b-badge
-            @click.prevent="showFiles"
+            :id="`badge-comment-${index}`"
             class="reestr__badge"
             variant="info"
             >{{ value.length }}</b-badge
           >
-        </b-button>
-      </template>
-
-      <template #cell(files_act)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="primary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
+          <b-tooltip :target="`badge-comment-${index}`" triggers="hover"
+            >Посмотреть все комментарии</b-tooltip
           >
         </b-button>
       </template>
 
-      <template #cell(files_invoice)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="secondary">
+      <template
+        v-slot:[`cell(${name})`]="{ value, field, index }"
+        v-for="name in nameFiles"
+      >
+        <b-button
+          @click="openLastFile(value)"
+          :key="name"
+          class="reestr__btn_badge"
+          size="sm"
+          variant="primary"
+        >
           <span>посмотреть</span>
           <b-badge
-            @click.prevent="showFiles"
+            :id="`badge-${name}-${index}`"
+            @click.stop="showModal(field.label, value)"
             class="reestr__badge"
             variant="info"
-            >{{ value.length }}</b-badge
-          >
-        </b-button>
-      </template>
-
-      <template #cell(files_check)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="primary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
-          >
-        </b-button>
-      </template>
-
-      <template #cell(files_ticket)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="secondary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
-          >
-        </b-button>
-      </template>
-
-      <template #cell(files_trn)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="primary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
-          >
-        </b-button>
-      </template>
-
-      <template #cell(files_other)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="secondary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
-          >
-        </b-button>
-      </template>
-
-      <template #cell(files_order)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="primary">
-          <span>посмотреть</span>
-          <b-badge
-            @click.prevent="showFiles"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
+            >{{ value.length }}
+          </b-badge>
+          <b-tooltip :target="`badge-${name}-${index}`" triggers="hover"
+            >Посмотреть список всех файлов</b-tooltip
           >
         </b-button>
       </template>
     </b-table>
+
     <div class="reestr__table_functions">
       <b-pagination
         class="reestr__table_paginate"
@@ -183,6 +141,12 @@
       />
       <b-form-select v-model="perPage" :options="pageOptions" />
     </div>
+
+    <files-modal
+      :title="modalFiles.title"
+      :files="modalFiles.files"
+      v-model="modalFiles.state"
+    />
   </div>
 </template>
 
@@ -190,11 +154,28 @@
 import Vue from "vue";
 import { headers } from "./constants/tableHeaders";
 
+import CompanySelect from "@/components/other/CompanySelect.vue";
+import FilesModal from "@/components/modals/FilesModal.vue";
+
 import demoData from "@/demo/ReestrDemo.json";
 import { DealList } from "@/models/Deal";
+import Period from "@/models/types";
+
+import FileAction from "@/helpers/FileAction";
+
+const nameFiles = [
+  "files_act",
+  "files_invoice",
+  "files_check",
+  "files_ticket",
+  "files_trn",
+  "files_other",
+  "files_order",
+];
 
 export default Vue.extend({
   name: "PageReestr",
+  components: { CompanySelect, FilesModal },
   data() {
     return {
       headers,
@@ -203,6 +184,14 @@ export default Vue.extend({
       currentPage: 1,
       perPage: 10,
       pageOptions: [5, 10, 15, { value: 100, text: "Все" }],
+      period: new Period({ to: null, from: null }),
+      company: "",
+      modalFiles: {
+        state: false,
+        files: [],
+        title: "",
+      },
+      nameFiles,
     };
   },
   mounted() {
@@ -224,6 +213,17 @@ export default Vue.extend({
     },
     showFiles(files) {
       console.log(files);
+    },
+    resetFilter() {
+      (this.period = { to: null, from: null }), (this.company = "");
+    },
+    showModal(label, files) {
+      this.modalFiles.state = true;
+      this.modalFiles.files = files;
+      this.modalFiles.title = label;
+    },
+    openLastFile(files) {
+      FileAction.open(files[files.length - 1]);
     },
   },
   computed: {
@@ -251,13 +251,21 @@ export default Vue.extend({
       margin-right 20px
     &_filter
       width 100%
-      flexy(space-between,flex-start)
+      flexy(space-between,flex-start,wrap)
       margin 30px 0px
+      &_btns
+        margin-top 30px
       &_btn
         margin 0px 10px
     &_search
-      flexy(center,center)
-      max-width 700px
+      flexy(flex-start,center,wrap)
+      &_wrapper
+        flexy(flex-start,center,wrap)
+      &_text
+        width 300px !important
+        margin-right 30px
+      &_company
+        width 250px
       &_period
         margin-left 50px !important
   &__datepicker
@@ -266,6 +274,8 @@ export default Vue.extend({
     background white
     color black !important
     margin-left 10px
+  &_btns
+     padding 30px
   &__btn
     &_badge
       display:flex !important

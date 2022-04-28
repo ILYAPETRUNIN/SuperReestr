@@ -33,19 +33,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-interface PeriodConfig {
-  to: Date | null;
-  from: Date | null;
-}
-
-class Period implements PeriodConfig {
-  to: Date | null;
-  from: Date | null;
-  constructor(args: PeriodConfig) {
-    this.to = args.to;
-    this.from = args.from;
-  }
-}
+import Period from "@/models/types";
 
 export default Vue.extend({
   name: "BasePeriodSelect",

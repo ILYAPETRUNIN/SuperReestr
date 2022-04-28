@@ -1,7 +1,7 @@
 export interface FileConfig {
   approved: boolean;
   create: string;
-  date_approved: any;
+  date_approved: Date;
   id: number;
   name: string;
   registry_id: number;
@@ -9,16 +9,46 @@ export interface FileConfig {
   type: string;
 }
 
+export class FileDeal implements FileConfig {
+  approved: boolean;
+  create: string;
+  date_approved: Date;
+  id: number;
+  name: string;
+  registry_id: number;
+  source: string;
+  type: string;
+  constructor(args: FileConfig) {
+    this.approved = args.approved;
+    this.create = args.create;
+    this.date_approved = args.date_approved;
+    this.id = args.id;
+    this.name = args.name;
+    this.registry_id = args.registry_id;
+    this.source = args.source;
+    this.type = args.type;
+  }
+
+  public get date(): string {
+    const date = new Date(this.create);
+    return date.toLocaleString("ru", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+}
+
 export interface DealConfig {
   comment: Array<any>;
   company_name: string;
   deal: number;
-  files_act: Array<FileConfig>;
-  files_check: Array<FileConfig>;
-  files_invoice: Array<FileConfig>;
-  files_order: Array<FileConfig>;
-  files_ticket: Array<FileConfig>;
-  files_trn: Array<FileConfig>;
+  files_act: Array<FileDeal>;
+  files_check: Array<FileDeal>;
+  files_invoice: Array<FileDeal>;
+  files_order: Array<FileDeal>;
+  files_ticket: Array<FileDeal>;
+  files_trn: Array<FileDeal>;
   full_amount_date: any;
   id: number;
   own_comapny: string;
@@ -31,12 +61,12 @@ export default class Deal implements DealConfig {
   comment: Array<any>;
   company_name: string;
   deal: number;
-  files_act: Array<FileConfig>;
-  files_check: Array<FileConfig>;
-  files_invoice: Array<FileConfig>;
-  files_order: Array<FileConfig>;
-  files_ticket: Array<FileConfig>;
-  files_trn: Array<FileConfig>;
+  files_act: Array<FileDeal>;
+  files_check: Array<FileDeal>;
+  files_invoice: Array<FileDeal>;
+  files_order: Array<FileDeal>;
+  files_ticket: Array<FileDeal>;
+  files_trn: Array<FileDeal>;
   full_amount_date: any;
   id: number;
   own_comapny: string;
@@ -47,12 +77,12 @@ export default class Deal implements DealConfig {
     this.comment = args.comment;
     this.company_name = args.company_name;
     this.deal = args.deal;
-    this.files_act = args.files_act;
-    this.files_check = args.files_check;
-    this.files_invoice = args.files_invoice;
-    this.files_order = args.files_order;
-    this.files_ticket = args.files_ticket;
-    this.files_trn = args.files_trn;
+    this.files_act = args.files_act.map((file) => new FileDeal(file));
+    this.files_check = args.files_check.map((file) => new FileDeal(file));
+    this.files_invoice = args.files_invoice.map((file) => new FileDeal(file));
+    this.files_order = args.files_order.map((file) => new FileDeal(file));
+    this.files_ticket = args.files_ticket.map((file) => new FileDeal(file));
+    this.files_trn = args.files_trn.map((file) => new FileDeal(file));
     this.full_amount_date = args.full_amount_date;
     this.id = args.id;
     this.own_comapny = args.own_comapny;
@@ -65,6 +95,6 @@ export default class Deal implements DealConfig {
 export class DealList {
   deals: Array<Deal>;
   constructor(deals: Array<Deal>) {
-    this.deals = deals;
+    this.deals = deals.map((item) => new Deal(item));
   }
 }
