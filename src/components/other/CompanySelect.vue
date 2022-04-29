@@ -48,5 +48,5 @@ export default {
 @require '~@/assets/stylus/mixins/mixins';
 .company-select
   height 40px !important
-  width 400px
+  font-size 14px !important
 </style>

@@ -28,7 +28,11 @@
           variant="success"
           >На печать</b-btn
         >
-        <b-btn class="reestr__table_filter_btn" pill variant="success"
+        <b-btn
+          @click="formReestr"
+          class="reestr__table_filter_btn"
+          pill
+          variant="success"
           >Сформировать реестр</b-btn
         >
       </div>
@@ -95,23 +99,15 @@
         />
       </template>
 
-      <template #cell(comment)="{ value, index }">
+      <template #cell(comment)="{ value }">
         <b-button class="reestr__btn_badge" size="sm" variant="success" pill>
           <span>Комментировать</span>
-          <b-badge
-            :id="`badge-comment-${index}`"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}</b-badge
-          >
-          <b-tooltip :target="`badge-comment-${index}`" triggers="hover"
-            >Посмотреть все комментарии</b-tooltip
-          >
+          <b-badge class="reestr__badge">{{ value.length }}</b-badge>
         </b-button>
       </template>
 
       <template
-        v-slot:[`cell(${name})`]="{ value, field, index }"
+        v-slot:[`cell(${name})`]="{ value, field }"
         v-for="name in nameFiles"
       >
         <b-button
@@ -123,15 +119,11 @@
         >
           <span>посмотреть</span>
           <b-badge
-            :id="`badge-${name}-${index}`"
             @click.stop="showModal(field.label, value)"
             class="reestr__badge"
             variant="info"
             >{{ value.length }}
           </b-badge>
-          <b-tooltip :target="`badge-${name}-${index}`" triggers="hover"
-            >Посмотреть список всех файлов</b-tooltip
-          >
         </b-button>
       </template>
     </b-table>
@@ -216,7 +208,8 @@ export default Vue.extend({
       else this.clearSelected();
     },
     resetFilter() {
-      (this.period = { to: null, from: null }), (this.company = "");
+      this.makeNotification("Действие", "Фильтр сброшен", "success");
+      this.period = new Period({ to: null, from: null });
     },
     showModal(label, files) {
       this.modalFiles.state = true;
@@ -255,6 +248,9 @@ export default Vue.extend({
           return obj;
         }),
       });
+    },
+    formReestr() {
+      this.makeNotification("Действие", "Реестр сформирован", "success");
     },
   },
   computed: {
@@ -295,13 +291,13 @@ export default Vue.extend({
         width 300px !important
         margin-right 30px
       &_company
-        width 250px
+        width 250px !important
       &_period
         margin-left 50px !important
   &__datepicker
     width 150px !important
   &__badge
-    background white
+    background white !important
     color black !important
     margin-left 10px
   &_btns

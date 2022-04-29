@@ -40,7 +40,7 @@ export default Vue.extend({
   props: {
     value: {
       type: Period,
-      default: new Period({ to: null, from: null }),
+      default: () => new Period({ to: null, from: null }),
     },
   },
   computed: {

@@ -6,6 +6,7 @@ import store from "./store";
 import "./components/";
 import "./plugins/bootstrap.ts";
 import "@/assets/stylus/index.styl";
+import "./mixins/";
 
 Vue.config.productionTip = false;
 
