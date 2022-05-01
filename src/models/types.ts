@@ -21,3 +21,8 @@ export default class Period implements PeriodConfig {
     this.from = args.from;
   }
 }
+
+export interface IList<T> {
+  size: number;
+  res: T[];
+}

@@ -17,7 +17,6 @@ export default abstract class PrintActions {
     const tbody = resTable.createTBody();
 
     table.headers.forEach((head: any) => {
-      console.log(head);
       this.addCell(thead, head.label);
     });
 

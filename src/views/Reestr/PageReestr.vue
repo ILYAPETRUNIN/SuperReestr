@@ -47,13 +47,20 @@
       select-mode="multi"
       responsive
       :fields="headers"
-      :items="demoData"
+      :items="items"
+      :busy="loading"
       ref="selectableTable"
       bordered
       @row-selected="onRowSelected"
-      :per-page="perPage"
-      :current-page="currentPage"
+      :per-page="filters.limit"
     >
+      <template #table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle mr-2"></b-spinner>
+          <strong>Загрузка...</strong>
+        </div>
+      </template>
+
       <template #head(selected)="">
         <b-checkbox @input="toogleAll" />
       </template>
@@ -131,12 +138,17 @@
     <div class="reestr__table_functions">
       <b-pagination
         class="reestr__table_paginate"
-        v-model="currentPage"
-        :total-rows="totalLenght"
-        :per-page="perPage"
+        v-model="page"
+        :total-rows="totalItems"
+        :per-page="filters.limit"
         aria-controls="my-table"
+        @change="paginate({ itemsPerPage: filters.limit, page })"
       />
-      <b-form-select v-model="perPage" :options="pageOptions" />
+      <b-form-select
+        @change="paginate({ itemsPerPage: filters.limit, page })"
+        v-model="filters.limit"
+        :options="pageOptions"
+      />
     </div>
 
     <files-modal
@@ -154,12 +166,13 @@ import { headers } from "./constants/tableHeaders";
 import CompanySelect from "@/components/other/CompanySelect.vue";
 import FilesModal from "@/components/modals/FilesModal.vue";
 
-import demoData from "@/demo/ReestrDemo.json";
-import { DealList } from "@/models/Deal";
 import Period from "@/models/types";
 
 import FileAction from "@/helpers/FileAction";
 import PrintActions from "@/helpers/PrintActions";
+
+import ReestrApi from "@/services/api/ReestrApi";
+import PaginateMixin from "@/mixins/PaginateMixin";
 
 const nameFiles = [
   "files_act",
@@ -174,13 +187,13 @@ const nameFiles = [
 export default Vue.extend({
   name: "PageReestr",
   components: { CompanySelect, FilesModal },
+  mixins: [PaginateMixin],
   data() {
     return {
+      loading: false,
       headers,
-      demoData: new DealList(demoData).deals,
+      items: [],
       selected: [],
-      currentPage: 1,
-      perPage: 10,
       pageOptions: [5, 10, 15, { value: 100, text: "Все" }],
       period: new Period({ to: null, from: null }),
       company: "",
@@ -252,10 +265,26 @@ export default Vue.extend({
     formReestr() {
       this.makeNotification("Действие", "Реестр сформирован", "success");
     },
+    async fetch() {
+      this.loading = true;
+      const params = { ...this.filters };
+
+      ReestrApi.getList(params)
+        .then((res) => {
+          this.totalItems = res.size;
+          this.items = res.res;
+          this.loading = false;
+        })
+        .catch(console.error);
+    },
   },
-  computed: {
-    totalLenght() {
-      return this.demoData.length;
+  async mounted() {
+    this.fetch();
+  },
+
+  watch: {
+    filters() {
+      this.fetch();
     },
   },
 });

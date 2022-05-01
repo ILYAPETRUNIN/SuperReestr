@@ -18,7 +18,7 @@ export default abstract class Api {
     // withCredentials : true,
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + this.getAccessToken(),
+      // Authorization: "Bearer " + this.getAccessToken(),
     },
     paramsSerializer: (params) =>
       qs.stringify(params, { skipNulls: true, arrayFormat: "comma" }),
