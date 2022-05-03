@@ -2,13 +2,15 @@ import Api from "@/services/api/BaseApiService";
 import { IList } from "@/models/types";
 
 import Deal, { DealConfig } from "@/models/Deal";
+import Company, { CompanyConfig } from "@/models/Company";
+import { ReestrGetConfig, ChangeDatePaymentConfig } from "../types";
 
 const name = "/payment_registry";
 export default abstract class ReestrApi extends Api {
-  static getList(params: object = {}): Promise<IList<Deal>> {
+  static getList(params: ReestrGetConfig = {}): Promise<IList<Deal>> {
     return new Promise((resolve, reject) => {
       this.apiService
-        .get(`${name}/get.json`, { params })
+        .get(`${name}/search.json`, { params })
         .then(({ data: catList }) =>
           resolve({
             size: catList.size,
@@ -19,67 +21,32 @@ export default abstract class ReestrApi extends Api {
     });
   }
 
-  static search(params: object = {}): Promise<IList<Deal>> {
+  static changeDatePayment(params: ChangeDatePaymentConfig): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiService
-        .get(`${name}/search.json`, { params })
+        .get(`${name}/date_update`, { params })
+        .then(({ data }) => resolve(data))
+        .catch((error) => reject(error));
+    });
+  }
+
+  static getCompanies(): Promise<Array<Company>> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${name}/get_company`)
         .then(({ data: catList }) =>
-          resolve({
-            size: catList.size,
-            res: catList.data.map((cat: DealConfig) => new Deal(cat)),
-          })
+          resolve(catList.map((cat: CompanyConfig) => new Company(cat)))
         )
         .catch((error) => reject(error));
     });
   }
 
-  static dateSearch(params: object = {}): Promise<IList<Deal>> {
+  static sendToPayment(row: Array<number>): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiService
-        .get(`${name}/date_search`, { params })
-        .then(({ data: catList }) =>
-          resolve({
-            size: catList.size,
-            res: catList.data.map((cat: DealConfig) => new Deal(cat)),
-          })
-        )
+        .post(`${name}/send_to_payment`, { row })
+        .then((data) => resolve(data))
         .catch((error) => reject(error));
     });
   }
-
-  // static get(id: routerId): Promise<BaseBankingProduct> {
-  //   return new Promise((resolve, reject) => {
-  //     this.apiService
-  //       .get(`/directories/products/${id}`)
-  //       .then(response => resolve(new BaseBankingProduct(response.data)))
-  //       .catch(error => reject(error));
-  //   });
-  // }
-
-  // static create(body: CreateBankingProductConfig): Promise<BaseBankingProduct> {
-  //   return new Promise((resolve, reject) => {
-  //     this.apiService
-  //       .post("/directories/products", body)
-  //       .then(response => resolve(new BaseBankingProduct(response.data)))
-  //       .catch(error => reject(error));
-  //   });
-  // }
-
-  // static update(id: routerId,body: CreateBankingProductConfig): Promise<BaseBankingProduct> {
-  //   return new Promise((resolve, reject) => {
-  //     this.apiService
-  //       .patch(`/directories/products/${id}`, body)
-  //       .then(response => resolve(new BaseBankingProduct(response.data)))
-  //       .catch(error => reject(error));
-  //   });
-  // }
-
-  // static delete(id: routerId): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     this.apiService
-  //       .delete(`/directories/products/${id}`)
-  //       .then(response => resolve(response))
-  //       .catch(error => reject(error));
-  //   });
-  // }
 }

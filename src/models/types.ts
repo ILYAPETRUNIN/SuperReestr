@@ -9,16 +9,16 @@ export interface TableHeaders {
 }
 
 export interface PeriodConfig {
-  to: Date | null;
-  from: Date | null;
+  date_to: Date | null;
+  date_from: Date | null;
 }
 
 export default class Period implements PeriodConfig {
-  to: Date | null;
-  from: Date | null;
+  date_to: Date | null;
+  date_from: Date | null;
   constructor(args: PeriodConfig) {
-    this.to = args.to;
-    this.from = args.from;
+    this.date_to = args.date_to;
+    this.date_from = args.date_from;
   }
 }
 

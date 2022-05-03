@@ -1,5 +1,6 @@
 <template>
   <b-form-select
+    :disabled="loading || options.length == 0"
     label-field="Компания"
     class="company-select"
     size="lg"
@@ -9,26 +10,47 @@
 </template>
 
 <script>
-const options = [
-  { value: "", text: "Выберите компанию", disabled: true },
-  { value: "a", text: "Компания 1" },
-  { value: "b", text: "Компания 2" },
-  { value: "c", text: "Компания 3" },
-  { value: "d", text: "Компания 4" },
-];
+import ReestrApi from "@/services/api/ReestrApi";
+
+// const options = [
+//   { value: "", text: "Выберите компанию", disabled: true },
+//   { value: "a", text: "Компания 1" },
+//   { value: "b", text: "Компания 2" },
+//   { value: "c", text: "Компания 3" },
+//   { value: "d", text: "Компания 4" },
+// ];
 
 export default {
   name: "CompanySelect",
   data() {
     return {
-      options,
+      loading: false,
+      options: [],
     };
   },
   props: {
     value: {
       type: String,
-      default: "",
+      default: null,
     },
+  },
+  mounted() {
+    this.loading = true;
+    ReestrApi.getCompanies()
+      .then((items) => {
+        this.options = items.map((item) => {
+          return { value: item.OwnCompany, text: item.OwnCompany };
+        });
+        this.options.push({
+          value: null,
+          text: "Выберите компанию",
+          disabled: true,
+        });
+      })
+      .catch((e) => {
+        throw e;
+      })
+      .finally((this.loading = false));
   },
   computed: {
     inputVal: {

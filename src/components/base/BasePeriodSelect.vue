@@ -2,6 +2,7 @@
   <div class="base-period-select">
     <div class="base-period-select__datapicker">
       <b-form-datepicker
+        :disabled="disabled"
         class="reestr__datepicker"
         :date-format-options="{
           year: 'numeric',
@@ -9,13 +10,14 @@
           day: 'numeric',
         }"
         locale="ru"
-        v-model="inputVal.to"
+        v-model="inputVal.date_to"
         placeholder="От"
       />
     </div>
     <span class="base-period-select__separator">—</span>
     <div class="base-period-select__datapicker">
       <b-form-datepicker
+        :disabled="disabled"
         class="reestr__datepicker"
         :date-format-options="{
           year: 'numeric',
@@ -23,7 +25,7 @@
           day: 'numeric',
         }"
         locale="ru"
-        v-model="inputVal.from"
+        v-model="inputVal.date_from"
         placeholder="До"
       />
     </div>
@@ -40,7 +42,11 @@ export default Vue.extend({
   props: {
     value: {
       type: Period,
-      default: () => new Period({ to: null, from: null }),
+      default: () => new Period({ date_to: null, date_from: null }),
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

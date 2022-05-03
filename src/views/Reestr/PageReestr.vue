@@ -2,17 +2,19 @@
   <div class="reestr">
     <div class="reestr__table_filter">
       <div class="reestr__table_search">
-        <base-search class="reestr__table_search_text" />
+        <base-search @search="searchText" class="reestr__table_search_text" />
         <div class="reestr__table_search_wrapper">
           <company-select
-            v-model="company"
+            v-model="search.company"
             class="reestr__table_search_company"
           />
           <base-period-select
-            v-model="period"
+            :disabled="loading"
+            v-model="search.date"
             class="reestr__table_search_period"
           />
           <b-btn
+            :disabled="loading"
             @click="resetFilter"
             class="reestr__table_filter_btn"
             variant="danger"
@@ -22,6 +24,7 @@
       </div>
       <div class="reestr__table_filter_btns">
         <b-btn
+          :disabled="loading"
           @click="print"
           class="reestr__table_filter_btn"
           pill
@@ -29,6 +32,7 @@
           >На печать</b-btn
         >
         <b-btn
+          :disabled="loading"
           @click="formReestr"
           class="reestr__table_filter_btn"
           pill
@@ -76,8 +80,9 @@
         {{ index + 1 }}
       </template>
 
-      <template #cell(pre_amount_date)="{ value }">
+      <template #cell(pre_amount_date)="{ item, value }">
         <b-form-datepicker
+          @input="changeDate(item.id, value, 'pre_date')"
           class="reestr__datepicker"
           :date-format-options="{
             year: 'numeric',
@@ -91,8 +96,9 @@
         />
       </template>
 
-      <template #cell(full_amount_date)="{ value }">
+      <template #cell(full_amount_date)="{ item, value }">
         <b-form-datepicker
+          @input="changeDate(item.id, value, 'full_date')"
           class="reestr__datepicker"
           :date-format-options="{
             year: 'numeric',
@@ -174,6 +180,8 @@ import PrintActions from "@/helpers/PrintActions";
 import ReestrApi from "@/services/api/ReestrApi";
 import PaginateMixin from "@/mixins/PaginateMixin";
 
+import FormatedDate from "@/helpers/DateFormat";
+
 const nameFiles = [
   "files_act",
   "files_invoice",
@@ -194,15 +202,18 @@ export default Vue.extend({
       headers,
       items: [],
       selected: [],
-      pageOptions: [5, 10, 15, { value: 100, text: "Все" }],
-      period: new Period({ to: null, from: null }),
-      company: "",
+      pageOptions: [5, 10, 15, 50, 100],
       modalFiles: {
         state: false,
         files: [],
         title: "",
       },
       nameFiles,
+      search: {
+        text: null,
+        date: new Period({ date_to: null, date_from: null }),
+        company: null,
+      },
     };
   },
 
@@ -222,7 +233,11 @@ export default Vue.extend({
     },
     resetFilter() {
       this.makeNotification("Действие", "Фильтр сброшен", "success");
-      this.period = new Period({ to: null, from: null });
+      this.search = {
+        text: null,
+        date: new Period({ date_to: null, date_from: null }),
+        company: null,
+      };
     },
     showModal(label, files) {
       this.modalFiles.state = true;
@@ -250,7 +265,7 @@ export default Vue.extend({
           { key: "preAmountDateFormat", label: "Дата предоплаты" },
           { key: "fullAmountDateFormat", label: "Дата полной оплаты" },
         ],
-        data: this.demoData.map((item, index) => {
+        data: this.items.map((item, index) => {
           let obj = {};
           thead.forEach((head) => {
             if (head == "index") {
@@ -263,11 +278,24 @@ export default Vue.extend({
       });
     },
     formReestr() {
-      this.makeNotification("Действие", "Реестр сформирован", "success");
+      if (this.selected.length > 0) {
+        ReestrApi.sendToPayment(this.selected.map((item) => item.id)).then(
+          this.makeNotification("Действие", "Реестр сформирован", "success")
+        );
+      } else {
+        this.makeNotification(
+          "Информация",
+          "Выберите хотя бы одну строку",
+          "danger"
+        );
+      }
     },
     async fetch() {
       this.loading = true;
-      const params = { ...this.filters };
+      const search = { ...this.search, ...this.search.date };
+      delete search.date;
+
+      const params = { ...search, ...this.filters };
 
       ReestrApi.getList(params)
         .then((res) => {
@@ -277,6 +305,12 @@ export default Vue.extend({
         })
         .catch(console.error);
     },
+    searchText(text) {
+      this.search.text = text;
+    },
+    changeDate(id, date, key) {
+      ReestrApi.changeDatePayment({ id, [key]: date });
+    },
   },
   async mounted() {
     this.fetch();
@@ -285,6 +319,12 @@ export default Vue.extend({
   watch: {
     filters() {
       this.fetch();
+    },
+    search: {
+      handler() {
+        this.fetch();
+      },
+      deep: true,
     },
   },
 });
