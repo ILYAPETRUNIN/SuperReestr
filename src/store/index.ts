@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex, { StoreOptions, MutationTree, GetterTree, ActionTree } from "vuex";
-import ApiError from "@/services/helpers/ApiError";
+// import ApiError from "@/services/helpers/ApiError";
 
 // modules
 import auth from "./modules/auth";
