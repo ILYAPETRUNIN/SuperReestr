@@ -1,5 +1,5 @@
 # frontend
-
+Node.js v12.13.0
 ## Project setup
 ```
 npm install

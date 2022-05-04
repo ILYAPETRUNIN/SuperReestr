@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console */
 import { AxiosError } from "axios";
 
 export default class ApiError {
