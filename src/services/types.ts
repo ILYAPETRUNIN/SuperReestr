@@ -19,3 +19,14 @@ export interface SetPaymentConfig {
   id: number;
   status_id: number;
 }
+
+enum TypePayment {
+  "p",
+  "f",
+}
+
+export interface ChangePaymentConfig {
+  id: number;
+  type: TypePayment;
+  sum: number;
+}

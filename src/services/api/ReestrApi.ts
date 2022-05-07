@@ -8,6 +8,7 @@ import {
   ReestrGetConfig,
   ChangeDatePaymentConfig,
   SetPaymentConfig,
+  ChangePaymentConfig,
 } from "../types";
 
 const name = "/payment_registry";
@@ -72,6 +73,15 @@ export default abstract class ReestrApi extends Api {
     return new Promise((resolve, reject) => {
       this.apiService
         .get(`${name}/status_payment_set`, { params })
+        .then(({ data }) => resolve(new Deal(data)))
+        .catch((error) => reject(error));
+    });
+  }
+
+  static changePayment(params: ChangePaymentConfig): Promise<Deal> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${name}/change_payment`, { params })
         .then(({ data }) => resolve(new Deal(data)))
         .catch((error) => reject(error));
     });

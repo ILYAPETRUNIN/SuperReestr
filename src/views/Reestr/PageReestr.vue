@@ -81,6 +81,20 @@
         {{ index + 1 }}
       </template>
 
+      <template #cell(pre_amount)="{ value, item }">
+        <base-editable-text
+          :value="value"
+          @update="changePayment(item.id, 'p', $event)"
+        />
+      </template>
+
+      <template #cell(summ_amount)="{ value, item }">
+        <base-editable-text
+          :value="value"
+          @update="changePayment(item.id, 'f', $event)"
+        />
+      </template>
+
       <template #cell(pre_amount_date)="{ item, value }">
         <b-form-datepicker
           @input="changeDate(item.id, value, 'pre_date')"
@@ -341,7 +355,18 @@ export default Vue.extend({
       this.search.text = text;
     },
     changeDate(id, date, key) {
-      ReestrApi.changeDatePayment({ id, [key]: date });
+      ReestrApi.changeDatePayment({ id, [key]: date })
+        .then(() => {
+          this.fetch();
+          this.makeNotification("Действие", "Дата оплаты изменена", "success");
+        })
+        .catch(() => {
+          this.makeNotification(
+            "Ошибка",
+            "Не удалось изменить дату оплаты",
+            "danger"
+          );
+        });
     },
     rowColor(item, type) {
       if (!item || type !== "row") return;
@@ -353,7 +378,27 @@ export default Vue.extend({
           this.fetch();
           this.makeNotification("Действие", "Статус оплаты изменён", "success");
         })
-        .catch(console.error);
+        .catch(() => {
+          this.makeNotification(
+            "Ошибка",
+            "Не удалось изменить статус оплаты",
+            "danger"
+          );
+        });
+    },
+    changePayment(id, type, sum) {
+      ReestrApi.changePayment({ id, type, sum })
+        .then(() => {
+          this.fetch();
+          this.makeNotification("Действие", "Сумма оплаты изменена", "success");
+        })
+        .catch(() => {
+          this.makeNotification(
+            "Ошибка",
+            "Не удалось изменить сумму платежа",
+            "danger"
+          );
+        });
     },
   },
   async mounted() {
