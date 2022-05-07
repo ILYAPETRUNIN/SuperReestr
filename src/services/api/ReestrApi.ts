@@ -2,8 +2,13 @@ import Api from "@/services/api/BaseApiService";
 import { IList } from "@/models/types";
 
 import Deal, { DealConfig } from "@/models/Deal";
+import StatusPayment, { StatusPaymentConfig } from "@/models/StatusPayment";
 import Company, { CompanyConfig } from "@/models/Company";
-import { ReestrGetConfig, ChangeDatePaymentConfig } from "../types";
+import {
+  ReestrGetConfig,
+  ChangeDatePaymentConfig,
+  SetPaymentConfig,
+} from "../types";
 
 const name = "/payment_registry";
 export default abstract class ReestrApi extends Api {
@@ -46,6 +51,28 @@ export default abstract class ReestrApi extends Api {
       this.apiService
         .post(`${name}/send_to_payment`, { row })
         .then((data) => resolve(data))
+        .catch((error) => reject(error));
+    });
+  }
+
+  static getStatusPaymentList(): Promise<Array<StatusPayment>> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${name}/status_payment_list`)
+        .then(({ data: catList }) =>
+          resolve(
+            catList.map((cat: StatusPaymentConfig) => new StatusPayment(cat))
+          )
+        )
+        .catch((error) => reject(error));
+    });
+  }
+
+  static setStatusPayment(params: SetPaymentConfig): Promise<Deal> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${name}/status_payment_set`, { params })
+        .then(({ data }) => resolve(new Deal(data)))
         .catch((error) => reject(error));
     });
   }

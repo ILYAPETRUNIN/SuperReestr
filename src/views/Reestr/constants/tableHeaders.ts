@@ -18,4 +18,5 @@ export const headers: TableHeaders[] = [
   { key: "files_trn", label: "ТРН(2 стороны)" },
   { key: "files_other", label: "Иные документы" },
   { key: "files_order", label: "Скан квитка" },
+  { key: "status", label: "" },
 ];

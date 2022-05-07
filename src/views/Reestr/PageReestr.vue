@@ -57,6 +57,7 @@
       bordered
       @row-selected="onRowSelected"
       :per-page="filters.limit"
+      :tbody-tr-attr="rowColor"
     >
       <template #table-busy>
         <div class="text-center text-danger my-2">
@@ -113,7 +114,12 @@
       </template>
 
       <template #cell(comment)="{ value }">
-        <b-button class="reestr__btn_badge" size="sm" variant="success" pill>
+        <b-button
+          class="reestr__btn_badge"
+          size="sm"
+          variant="outline-dark"
+          pill
+        >
           <span>Комментировать</span>
           <b-badge class="reestr__badge">{{ value.length }}</b-badge>
         </b-button>
@@ -128,7 +134,7 @@
           :key="name"
           class="reestr__btn_badge"
           size="sm"
-          variant="primary"
+          variant="outline-dark"
         >
           <span>посмотреть</span>
           <b-badge
@@ -138,6 +144,24 @@
             >{{ value.length }}
           </b-badge>
         </b-button>
+      </template>
+
+      <template #cell(status)="{ item }">
+        <b-dropdown size="sm" class="m-2">
+          <b-dropdown-item-button
+            @click="setStatusPayment(item.id, statusPayment.id)"
+            v-for="statusPayment in statusPaymentList"
+            :key="statusPayment.id"
+          >
+            <div class="reestr__table_statusPayment">
+              <div
+                :style="{ background: statusPayment.color }"
+                class="reestr__table_statusPayment_badge"
+              />
+              {{ statusPayment.text }}
+            </div>
+          </b-dropdown-item-button>
+        </b-dropdown>
       </template>
     </b-table>
 
@@ -214,6 +238,7 @@ export default Vue.extend({
         date: new Period({ date_to: null, date_from: null }),
         company: null,
       },
+      statusPaymentList: [],
     };
   },
 
@@ -305,15 +330,35 @@ export default Vue.extend({
         })
         .catch(console.error);
     },
+    fetchStatusPayment() {
+      ReestrApi.getStatusPaymentList()
+        .then((res) => {
+          this.statusPaymentList = res;
+        })
+        .catch(console.error);
+    },
     searchText(text) {
       this.search.text = text;
     },
     changeDate(id, date, key) {
       ReestrApi.changeDatePayment({ id, [key]: date });
     },
+    rowColor(item, type) {
+      if (!item || type !== "row") return;
+      return { style: `background:${item.status_color}` };
+    },
+    setStatusPayment(id, status_id) {
+      ReestrApi.setStatusPayment({ id, status_id })
+        .then(() => {
+          this.fetch();
+          this.makeNotification("Действие", "Статус оплаты изменён", "success");
+        })
+        .catch(console.error);
+    },
   },
   async mounted() {
     this.fetch();
+    this.fetchStatusPayment();
   },
 
   watch: {
@@ -363,6 +408,12 @@ export default Vue.extend({
         width 250px !important
       &_period
         margin-left 50px !important
+    &_statusPayment
+      flexy(flex-start,center)
+      &_badge
+        margin-right 10px
+        width 50px
+        height 25px
   &__datepicker
     width 150px !important
   &__badge

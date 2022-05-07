@@ -14,3 +14,8 @@ export interface ChangeDatePaymentConfig {
   pre_date?: string;
   full_date?: string;
 }
+
+export interface SetPaymentConfig {
+  id: number;
+  status_id: number;
+}

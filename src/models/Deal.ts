@@ -52,6 +52,11 @@ export interface DealConfig {
   pre_amount: any;
   pre_amount_date: string;
   summ_amount: any;
+  state_client: number;
+  status_color: string;
+  status_id: number;
+  status_order: number;
+  status_text: string;
 }
 
 export default class Deal implements DealConfig {
@@ -70,6 +75,12 @@ export default class Deal implements DealConfig {
   pre_amount: any;
   pre_amount_date: string;
   summ_amount: any;
+  state_client: number;
+  status_color: string;
+  status_id: number;
+  status_order: number;
+  status_text: string;
+
   constructor(args: DealConfig) {
     this.comment = args.comment;
     this.company_name = args.company_name;
@@ -86,6 +97,11 @@ export default class Deal implements DealConfig {
     this.pre_amount = args.pre_amount;
     this.pre_amount_date = args.pre_amount_date;
     this.summ_amount = args.summ_amount;
+    this.state_client = args.state_client;
+    this.status_color = args.status_color;
+    this.status_id = args.status_id;
+    this.status_order = args.status_order;
+    this.status_text = args.status_text;
   }
 
   public get fullAmountDateFormat(): string {
