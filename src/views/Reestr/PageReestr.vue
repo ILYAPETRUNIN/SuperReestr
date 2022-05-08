@@ -1,5 +1,12 @@
 <template>
   <div class="reestr">
+    <div class="reestr__actions">
+      <b-btn @click="modalCreate = true" class="reestr__btn" variant="primary">
+        <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
+        Будущие платежи
+      </b-btn>
+    </div>
+
     <div class="reestr__table_filter">
       <div class="reestr__table_search">
         <base-search @search="searchText" class="reestr__table_search_text" />
@@ -200,6 +207,7 @@
       :files="modalFiles.files"
       v-model="modalFiles.state"
     />
+    <create-deal-modal v-model="modalCreate" />
   </div>
 </template>
 
@@ -209,6 +217,7 @@ import { headers } from "./constants/tableHeaders";
 
 import CompanySelect from "@/components/other/CompanySelect.vue";
 import FilesModal from "@/components/modals/FilesModal.vue";
+import CreateDealModal from "@/components/modals/CreateDealModal.vue";
 
 import Period from "@/models/types";
 
@@ -232,7 +241,7 @@ const nameFiles = [
 
 export default Vue.extend({
   name: "PageReestr",
-  components: { CompanySelect, FilesModal },
+  components: { CompanySelect, FilesModal, CreateDealModal },
   mixins: [PaginateMixin],
   data() {
     return {
@@ -246,6 +255,7 @@ export default Vue.extend({
         files: [],
         title: "",
       },
+      modalCreate: false,
       nameFiles,
       search: {
         text: null,
@@ -427,6 +437,12 @@ export default Vue.extend({
   container(true)
   flexy(center,center,nowrap,column)
   max-width 95% !important
+  &__actions
+    width 100%
+    margin 20px 0px
+    flexy(flex-start,flex-start,wrap)
+  &__btn
+    flexy(center,center)
   &__table
     width 100%
     &_functions
