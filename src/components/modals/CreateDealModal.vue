@@ -2,7 +2,6 @@
   <b-modal
     button-size="sm"
     scrollable
-    :title="title"
     centered
     v-model="inputVal"
     hide-footer
@@ -103,8 +102,8 @@ export default {
     return {
       form: {
         deal: null,
-        company_name: "",
-        own_comapny: "",
+        company_name: null,
+        own_comapny: null,
         pre_amount: null,
         pre_amount_date: null,
         account: null,
@@ -134,6 +133,10 @@ export default {
     },
     onReset(event) {
       event.preventDefault();
+
+      for (let key in this.form) {
+        this.form[key] = null;
+      }
     },
   },
 };
