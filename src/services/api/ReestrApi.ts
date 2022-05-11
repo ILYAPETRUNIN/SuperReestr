@@ -78,11 +78,20 @@ export default abstract class ReestrApi extends Api {
     });
   }
 
-  static changePayment(params: ChangePaymentConfig): Promise<Deal> {
+  static changePayment(params: ChangePaymentConfig): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiService
         .get(`${name}/change_payment`, { params })
-        .then(({ data }) => resolve(new Deal(data)))
+        .then((data) => resolve(data))
+        .catch((error) => reject(error));
+    });
+  }
+
+  static createPayment(params: any = {}, type: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${name}/${type}`, { params })
+        .then(({ data }) => resolve(data))
         .catch((error) => reject(error));
     });
   }

@@ -1,9 +1,21 @@
 <template>
   <div class="reestr">
     <div class="reestr__actions">
-      <b-btn @click="modalCreate = true" class="reestr__btn" variant="primary">
+      <b-btn
+        @click="modalCreate = { state: true, type: 'future_payment' }"
+        class="reestr__btn"
+        variant="primary"
+      >
         <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
         Будущие платежи
+      </b-btn>
+      <b-btn
+        @click="modalCreate = { state: true, type: 'other_payment' }"
+        class="reestr__btn"
+        variant="primary"
+      >
+        <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
+        Другие платежи
       </b-btn>
     </div>
 
@@ -207,7 +219,7 @@
       :files="modalFiles.files"
       v-model="modalFiles.state"
     />
-    <create-deal-modal v-model="modalCreate" />
+    <create-deal-modal @submit="createDeal" v-model="modalCreate.state" />
   </div>
 </template>
 
@@ -255,7 +267,10 @@ export default Vue.extend({
         files: [],
         title: "",
       },
-      modalCreate: false,
+      modalCreate: {
+        state: false,
+        type: "future_payment",
+      },
       nameFiles,
       search: {
         text: null,
@@ -328,9 +343,17 @@ export default Vue.extend({
     },
     formReestr() {
       if (this.selected.length > 0) {
-        ReestrApi.sendToPayment(this.selected.map((item) => item.id)).then(
-          this.makeNotification("Действие", "Реестр сформирован", "success")
-        );
+        ReestrApi.sendToPayment(this.selected.map((item) => item.id))
+          .then(() =>
+            this.makeNotification("Действие", "Реестр сформирован", "success")
+          )
+          .catch(() => {
+            this.makeNotification(
+              "Ошибка",
+              "Не удалось сформировать реестр",
+              "danger"
+            );
+          });
       } else {
         this.makeNotification(
           "Информация",
@@ -410,6 +433,22 @@ export default Vue.extend({
           );
         });
     },
+
+    createDeal(params) {
+      ReestrApi.createPayment(params, this.modalCreate.type)
+        .then(() => {
+          this.fetch();
+          this.modalCreate.state = false;
+          this.makeNotification("Действие", "Сделка создана", "success");
+        })
+        .catch(() => {
+          this.makeNotification(
+            "Ошибка",
+            "Не удалось создать сделку",
+            "danger"
+          );
+        });
+    },
   },
   async mounted() {
     this.fetch();
@@ -443,6 +482,7 @@ export default Vue.extend({
     flexy(flex-start,flex-start,wrap)
   &__btn
     flexy(center,center)
+    margin-right 10px
   &__table
     width 100%
     &_functions
