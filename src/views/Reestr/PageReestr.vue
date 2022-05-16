@@ -116,7 +116,7 @@
 
       <template #cell(pre_amount_date)="{ item, value }">
         <b-form-datepicker
-          @input="changeDate(item.id, value, 'pre_date')"
+          @input="changeDate(item.id, $event, 'pre_date')"
           class="reestr__datepicker"
           :date-format-options="{
             year: 'numeric',
@@ -132,7 +132,7 @@
 
       <template #cell(full_amount_date)="{ item, value }">
         <b-form-datepicker
-          @input="changeDate(item.id, value, 'full_date')"
+          @input="changeDate(item.id, $event, 'full_date')"
           class="reestr__datepicker"
           :date-format-options="{
             year: 'numeric',
@@ -385,7 +385,6 @@ export default Vue.extend({
     changeDate(id, date, key) {
       ReestrApi.changeDatePayment({ id, [key]: date })
         .then(() => {
-          this.fetch();
           this.makeNotification("Действие", "Дата оплаты изменена", "success");
         })
         .catch(() => {
