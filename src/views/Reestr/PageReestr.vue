@@ -205,13 +205,8 @@
         :total-rows="totalItems"
         :per-page="filters.limit"
         aria-controls="my-table"
-        @change="paginate({ itemsPerPage: filters.limit, page })"
       />
-      <b-form-select
-        @change="paginate({ itemsPerPage: filters.limit, page })"
-        v-model="filters.limit"
-        :options="pageOptions"
-      />
+      <b-form-select v-model="limit" :options="pageOptions" />
     </div>
 
     <files-modal
