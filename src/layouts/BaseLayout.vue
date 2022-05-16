@@ -34,13 +34,13 @@ export default Vue.extend({
   data() {
     return {
       links,
-      tabIndex: 0,
+      tabIndex: 2,
     };
   },
-  methods: {
-    next(name: string) {
-      this.$router.push({ name });
-    },
+  mounted() {
+    setTimeout(() => {
+      this.tabIndex = 2;
+    }, 5);
   },
   watch: {
     tabIndex(val) {

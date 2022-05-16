@@ -214,7 +214,11 @@
       :files="modalFiles.files"
       v-model="modalFiles.state"
     />
-    <create-deal-modal @submit="createDeal" v-model="modalCreate.state" />
+    <create-deal-modal
+      :typePayment="modalCreate.type == 'future_payment' ? 'pre' : 'full'"
+      @submit="createDeal"
+      v-model="modalCreate.state"
+    />
   </div>
 </template>
 

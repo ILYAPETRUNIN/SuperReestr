@@ -13,6 +13,7 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "home",
     component: BaseLayout,
+    redirect: { name: "reestr" },
     children: [
       {
         path: "/reestr",
@@ -22,6 +23,31 @@ const routes: Array<RouteConfig> = [
       {
         path: "/developing",
         name: "developing",
+        component: PageDeveloping,
+      },
+      {
+        path: "/contract1",
+        name: "contract1",
+        component: PageDeveloping,
+      },
+      {
+        path: "/contract2",
+        name: "contract2",
+        component: PageDeveloping,
+      },
+      {
+        path: "/scans",
+        name: "scans",
+        component: PageDeveloping,
+      },
+      {
+        path: "/originals",
+        name: "originals",
+        component: PageDeveloping,
+      },
+      {
+        path: "/forPayment",
+        name: "forPayment",
         component: PageDeveloping,
       },
     ],
@@ -41,20 +67,6 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const pathDev = [
-    "scans",
-    "originals",
-    "forPayment",
-    "contract1",
-    "contract2",
-  ];
-  if (pathDev.includes(to.name ? to.name : "")) {
-    next("/developing");
-  }
-  next();
 });
 
 export default router;

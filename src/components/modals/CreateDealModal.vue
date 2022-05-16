@@ -45,13 +45,16 @@
       <b-form-group label="Наша компания*" label-for="input-3">
         <b-form-input
           id="input-3"
-          v-model="form.own_comapny"
+          v-model="form.own_company"
           placeholder="Введите компанию"
           required
         />
       </b-form-group>
 
-      <b-form-group label="Сумма предоплаты*" label-for="input-4">
+      <b-form-group
+        :label="`Сумма ${typePayment == 'pre' ? 'предоплаты' : 'оплаты'}*`"
+        label-for="input-4"
+      >
         <b-form-input
           type="number"
           id="input-4"
@@ -61,7 +64,10 @@
         />
       </b-form-group>
 
-      <b-form-group label="Дата предоплаты*" label-for="input-5">
+      <b-form-group
+        :label="`Дата ${typePayment == 'pre' ? 'предоплаты' : 'оплаты'}*`"
+        label-for="input-5"
+      >
         <b-form-datepicker
           v-model="form.pre_amount_date"
           id="input-5"
@@ -78,7 +84,6 @@
 
       <b-form-group label="Счёт*" label-for="input-6">
         <b-form-input
-          type="number"
           id="input-6"
           v-model="form.account"
           placeholder="Введите номер счёта"
@@ -104,7 +109,7 @@ export default {
       form: {
         deal: null,
         company_name: null,
-        own_comapny: null,
+        own_company: null,
         pre_amount: null,
         pre_amount_date: null,
         account: null,
@@ -115,6 +120,13 @@ export default {
     value: {
       type: Boolean,
       default: false,
+    },
+    typePayment: {
+      type: String,
+      default: "pre",
+      validator(value) {
+        return ["pre", "full"].includes(value);
+      },
     },
   },
   computed: {
