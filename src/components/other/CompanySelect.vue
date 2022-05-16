@@ -41,10 +41,9 @@ export default {
         this.options = items.map((item) => {
           return { value: item.OwnCompany, text: item.OwnCompany };
         });
-        this.options.push({
+        this.options.unshift({
           value: null,
           text: "Выберите компанию",
-          disabled: true,
         });
       })
       .catch((e) => {
