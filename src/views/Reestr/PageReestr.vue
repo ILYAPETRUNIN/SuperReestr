@@ -77,6 +77,7 @@
       :per-page="filters.limit"
       :tbody-tr-attr="rowColor"
       @row-clicked="toogleRow"
+      sticky-header
     >
       <template #table-busy>
         <div class="text-center text-danger my-2">
@@ -517,6 +518,7 @@ export default Vue.extend({
     margin-right 10px
   &__table
     width 100%
+    max-height: 800px !important
     &_functions
       flexy(center,center)
     &_paginate
