@@ -445,7 +445,9 @@ export default Vue.extend({
     changePayment(id, type, sum) {
       ReestrApi.changePayment({ id, type, sum })
         .then(() => {
-          this.fetch();
+          const data = this.items.find((item) => item.id == id);
+          if (type == "p") data.pre_amount = sum;
+          else data.summ_amount = sum;
           this.makeNotification("Действие", "Сумма оплаты изменена", "success");
         })
         .catch(() => {
