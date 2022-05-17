@@ -2,7 +2,8 @@ import { TableHeaders } from "@/models/types";
 
 export const headers: TableHeaders[] = [
   { key: "selected", label: "" },
-  { key: "index", label: "#" },
+  { key: "index", label: "" },
+  { key: "id", label: "#" },
   { key: "deal", label: "Номер сделки" },
   { key: "company_name", label: "Компания перевозчика" },
   { key: "own_comapny", label: "Наша компания" },

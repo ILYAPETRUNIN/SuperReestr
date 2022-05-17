@@ -74,9 +74,9 @@
       :busy="loading"
       ref="selectableTable"
       bordered
-      @row-selected="onRowSelected"
       :per-page="filters.limit"
       :tbody-tr-attr="rowColor"
+      @row-clicked="toogleRow"
     >
       <template #table-busy>
         <div class="text-center text-danger my-2">
@@ -89,15 +89,16 @@
         <b-checkbox @input="toogleAll" />
       </template>
 
-      <template #cell(selected)="{ rowSelected, selectRow, unselectRow }">
-        <b-checkbox
-          @input="(val) => (val ? selectRow() : unselectRow())"
-          :checked="rowSelected"
-        />
+      <template #cell(selected)="{ rowSelected }">
+        <b-checkbox :checked="rowSelected" disabled />
       </template>
 
       <template #cell(index)="{ index }">
         {{ index + 1 }}
+      </template>
+
+      <template #cell(id)="{ value }">
+        {{ value }}
       </template>
 
       <template #cell(pre_amount)="{ value, item }">
@@ -286,9 +287,32 @@ export default Vue.extend({
     },
     selectAllRows() {
       this.$refs.selectableTable.selectAllRows();
+      this.items.forEach((el) => {
+        const indexInArray = this.selected.findIndex(
+          (selEl) => el.id == selEl.id
+        );
+        if (indexInArray == -1) this.selectRow(el);
+      });
     },
     clearSelected() {
       this.$refs.selectableTable.clearSelected();
+      this.items.forEach((el) => {
+        const indexInArray = this.selected.findIndex(
+          (selEl) => el.id == selEl.id
+        );
+        if (indexInArray != -1) this.unselectRow(indexInArray);
+      });
+    },
+    selectRow(item) {
+      this.selected.push(item);
+    },
+    unselectRow(index) {
+      this.selected.splice(index, 1);
+    },
+    toogleRow(item, index) {
+      const indexInArray = this.selected.findIndex((el) => el.id == item.id);
+      if (indexInArray != -1) this.unselectRow(indexInArray);
+      else this.selectRow(item);
     },
     toogleAll(state) {
       if (state) this.selectAllRows();
@@ -328,7 +352,7 @@ export default Vue.extend({
           { key: "preAmountDateFormat", label: "Дата предоплаты" },
           { key: "fullAmountDateFormat", label: "Дата полной оплаты" },
         ],
-        data: this.items.map((item, index) => {
+        data: this.selected.map((item, index) => {
           let obj = {};
           thead.forEach((head) => {
             if (head == "index") {
@@ -373,6 +397,7 @@ export default Vue.extend({
           this.totalItems = res.size;
           this.items = res.res;
           this.loading = false;
+          setTimeout(this.initTable.bind(this), 100);
         })
         .catch(console.error);
     },
@@ -446,6 +471,13 @@ export default Vue.extend({
             "danger"
           );
         });
+    },
+    initTable() {
+      this.items.forEach((el, index) => {
+        if (this.selected.find((selEl) => el.id == selEl.id)) {
+          this.$refs.selectableTable.selectRow(index);
+        }
+      });
     },
   },
   async mounted() {

@@ -52,7 +52,6 @@ export default Vue.extend<IData, IMethods, IComputed>({
 
   methods: {
     paginate(options) {
-      console.log("Пагинация");
       const { page, itemsPerPage: limit } = options;
       const offset = (page - 1) * limit;
 
