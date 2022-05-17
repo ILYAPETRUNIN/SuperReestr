@@ -57,6 +57,7 @@ export interface DealConfig {
   status_id: number;
   status_order: number;
   status_text: string;
+  account_number: string;
 }
 
 export default class Deal implements DealConfig {
@@ -80,6 +81,7 @@ export default class Deal implements DealConfig {
   status_id: number;
   status_order: number;
   status_text: string;
+  account_number: string;
 
   constructor(args: DealConfig) {
     this.comment = args.comment;
@@ -102,6 +104,7 @@ export default class Deal implements DealConfig {
     this.status_id = args.status_id;
     this.status_order = args.status_order;
     this.status_text = args.status_text;
+    this.account_number = args.account_number;
   }
 
   public get fullAmountDateFormat(): string {

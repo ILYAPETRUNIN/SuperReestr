@@ -5,6 +5,7 @@ export const headers: TableHeaders[] = [
   { key: "index", label: "" },
   { key: "id", label: "#" },
   { key: "deal", label: "Номер сделки" },
+  { key: "account_number", label: "Номер счёта" },
   { key: "company_name", label: "Компания перевозчика" },
   { key: "own_comapny", label: "Наша компания" },
   { key: "pre_amount", label: "Сумма предоплаты" },

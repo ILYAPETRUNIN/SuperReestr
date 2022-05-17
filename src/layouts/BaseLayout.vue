@@ -15,7 +15,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { DealList } from "@/models/Deal";
 
 import DealInfo from "@/components/other/DealInfo.vue";
 

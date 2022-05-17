@@ -2,7 +2,7 @@
   <div class="deal-info">
     <div
       class="deal-info__item"
-      v-for="(info, index) in infoDeals"
+      v-for="(info, index) in statusPaymentList"
       :key="index"
     >
       <div class="deal-info__badge" :style="{ background: info.color }" />
@@ -12,20 +12,25 @@
 </template>
 
 <script>
-const infoDeals = [
-  { color: "red", text: "Новые документы в процессе проверки" },
-  { color: "green", text: "Документы проверены в полном комплекте" },
-  { color: "pink", text: "Ожидание исправленных документов от перевоза" },
-  {
-    color: "yellow",
-    text: "Проверены,нет квитка от перевоза,чтобы поставить в оплату",
-  },
-];
+import ReestrApi from "@/services/api/ReestrApi";
+
 export default {
+  mounted() {
+    this.fetchStatusPayment();
+  },
   data() {
     return {
-      infoDeals,
+      statusPaymentList: [],
     };
+  },
+  methods: {
+    fetchStatusPayment() {
+      ReestrApi.getStatusPaymentList()
+        .then((res) => {
+          this.statusPaymentList = res;
+        })
+        .catch(console.error);
+    },
   },
 };
 </script>

@@ -339,6 +339,7 @@ export default Vue.extend({
       let thead = [
         "index",
         "deal",
+        "account_number",
         "own_comapny",
         "company_name",
         "pre_amount",
