@@ -433,17 +433,6 @@ export default Vue.extend({
         margin-top 30px
       &_btn
         margin 0px 10px
-    &_search
-      flexy(flex-start,center,wrap)
-      &_wrapper
-        flexy(flex-start,center,wrap)
-      &_text
-        width 300px !important
-        margin-right 30px
-      &_company
-        width 250px !important
-      &_period
-        margin-left 50px !important
     &_statusPayment
       flexy(flex-start,center)
       &_badge
