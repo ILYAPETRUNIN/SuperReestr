@@ -32,17 +32,14 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-
-import Period from "@/models/types";
 
 export default Vue.extend({
   name: "BasePeriodSelect",
   props: {
     value: {
-      type: Period,
-      default: () => new Period({ date_to: null, date_from: null }),
+      default: { date_to: null, date_from: null },
     },
     disabled: {
       type: Boolean,
@@ -51,12 +48,17 @@ export default Vue.extend({
   },
   computed: {
     inputVal: {
-      get(): Period {
+      get() {
         return this.value;
       },
-      set(value: Period) {
+      set(value) {
         this.$emit("input", value);
       },
+    },
+  },
+  methods: {
+    reset() {
+      this.inputVal = { date_to: null, date_from: null };
     },
   },
 });

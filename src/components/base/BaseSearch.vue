@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     search() {
-      this.$emit("search", this.text);
+      this.$emit("input", this.text);
     },
   },
 };

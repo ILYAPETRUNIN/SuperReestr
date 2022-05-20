@@ -20,27 +20,7 @@
     </div>
 
     <div class="reestr__table_filter">
-      <div class="reestr__table_search">
-        <base-search @search="searchText" class="reestr__table_search_text" />
-        <div class="reestr__table_search_wrapper">
-          <company-select
-            v-model="search.company"
-            class="reestr__table_search_company"
-          />
-          <base-period-select
-            :disabled="loading"
-            v-model="search.date"
-            class="reestr__table_search_period"
-          />
-          <b-btn
-            :disabled="loading"
-            @click="resetFilter"
-            class="reestr__table_filter_btn"
-            variant="danger"
-            >Сбросить</b-btn
-          >
-        </div>
-      </div>
+      <table-filter v-model="model" :schema="schema" />
       <div class="reestr__table_filter_btns">
         <b-btn
           :disabled="loading"
@@ -200,16 +180,11 @@
       </template>
     </b-table>
 
-    <div class="reestr__table_functions">
-      <b-pagination
-        class="reestr__table_paginate"
-        v-model="page"
-        :total-rows="totalItems"
-        :per-page="filters.limit"
-        aria-controls="my-table"
-      />
-      <b-form-select v-model="limit" :options="pageOptions" />
-    </div>
+    <table-paginate
+      v-model="page"
+      :totalItems="totalItems"
+      @changeLimit="limit = $event"
+    />
 
     <files-modal
       :title="modalFiles.title"
@@ -228,11 +203,8 @@
 import Vue from "vue";
 import { headers } from "./constants/tableHeaders";
 
-import CompanySelect from "@/components/other/CompanySelect.vue";
 import FilesModal from "@/components/modals/FilesModal.vue";
 import CreateDealModal from "@/components/modals/CreateDealModal.vue";
-
-import Period from "@/models/types";
 
 import FileAction from "@/helpers/FileAction";
 import PrintActions from "@/helpers/PrintActions";
@@ -241,28 +213,19 @@ import ReestrApi from "@/services/api/ReestrApi";
 import PaginateMixin from "@/mixins/PaginateMixin";
 import TableSelectMixin from "@/mixins/TableSelectMixin";
 
-import FormatedDate from "@/helpers/DateFormat";
+import { model, schema } from "./constants/filter.ts";
 
-const nameFiles = [
-  "files_act",
-  "files_invoice",
-  "files_check",
-  "files_ticket",
-  "files_trn",
-  "files_other",
-  "files_order",
-];
+import nameFiles from "./constants/nameFiles.ts";
 
 export default Vue.extend({
   name: "PageReestr",
-  components: { CompanySelect, FilesModal, CreateDealModal },
+  components: { FilesModal, CreateDealModal },
   mixins: [PaginateMixin, TableSelectMixin],
   data() {
     return {
       loading: false,
       headers,
       items: [],
-      pageOptions: [5, 10, 15, 50, 100],
       modalFiles: {
         state: false,
         files: [],
@@ -273,24 +236,13 @@ export default Vue.extend({
         type: "future_payment",
       },
       nameFiles,
-      search: {
-        text: null,
-        date: new Period({ date_to: null, date_from: null }),
-        company: null,
-      },
+      schema,
+      model,
       statusPaymentList: [],
     };
   },
 
   methods: {
-    resetFilter() {
-      this.makeNotification("Действие", "Фильтр сброшен", "success");
-      this.search = {
-        text: null,
-        date: new Period({ date_to: null, date_from: null }),
-        company: null,
-      };
-    },
     showModal(label, files) {
       this.modalFiles.state = true;
       this.modalFiles.files = files;
@@ -353,11 +305,10 @@ export default Vue.extend({
     },
     async fetch() {
       this.loading = true;
-      const search = { ...this.search, ...this.search.date };
+      const search = { ...this.model, ...this.model.date };
       delete search.date;
 
       const params = { ...search, ...this.filters };
-
       ReestrApi.getList(params)
         .then((res) => {
           this.totalItems = res.size;
@@ -373,9 +324,6 @@ export default Vue.extend({
           this.statusPaymentList = res;
         })
         .catch(console.error);
-    },
-    searchText(text) {
-      this.search.text = text;
     },
     changeDate(id, date, key) {
       ReestrApi.changeDatePayment({ id, [key]: date })
@@ -450,7 +398,7 @@ export default Vue.extend({
     filters() {
       this.fetch();
     },
-    search: {
+    model: {
       handler() {
         this.fetch();
       },
@@ -477,11 +425,6 @@ export default Vue.extend({
   &__table
     width 100%
     max-height: 800px !important
-    &_functions
-      flexy(center,center)
-    &_paginate
-      margin 0px
-      margin-right 20px
     &_filter
       width 100%
       flexy(space-between,flex-start,wrap)
