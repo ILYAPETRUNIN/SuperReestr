@@ -1,9 +1,9 @@
 <template>
-  <div class="reestr">
-    <div class="reestr__actions">
+  <div class="table">
+    <div class="table__actions">
       <b-btn
         @click="modalCreate = { state: true, type: 'future_payment' }"
-        class="reestr__btn"
+        class="table__btn"
         variant="primary"
       >
         <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
@@ -11,7 +11,7 @@
       </b-btn>
       <b-btn
         @click="modalCreate = { state: true, type: 'other_payment' }"
-        class="reestr__btn"
+        class="table__btn"
         variant="primary"
       >
         <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
@@ -19,9 +19,9 @@
       </b-btn>
     </div>
 
-    <div class="reestr__table_filter">
+    <div class="table__table_filter">
       <table-filter v-model="model" :schema="schema" />
-      <div class="reestr__table_filter_btns">
+      <div class="table__table_btns">
         <b-btn
           :disabled="loading"
           @click="print"
@@ -45,7 +45,7 @@
       id="reestr-table"
       hover
       striped
-      class="reestr__table"
+      class="table__table"
       selectable
       select-mode="multi"
       responsive
@@ -411,29 +411,10 @@ export default Vue.extend({
 <style lang="stylus">
 @require '~@/assets/stylus/vars/variables';
 @require '~@/assets/stylus/mixins/mixins';
+@require '~@/assets/stylus/style/table.styl';
+
 .reestr
-  container(true)
-  flexy(center,center,nowrap,column)
-  max-width 95% !important
-  &__actions
-    width 100%
-    margin 20px 0px
-    flexy(flex-start,flex-start,wrap)
-  &__btn
-    flexy(center,center)
-    margin-right 10px
-  &__table
-    width 100%
-    max-height: 800px !important
-    &_filter
-      width 100%
-      flexy(space-between,flex-start,wrap)
-      margin 30px 0px
-      &_btns
-        margin-top 30px
-      &_btn
-        margin 0px 10px
-    &_statusPayment
+  &_statusPayment
       flexy(flex-start,center)
       &_badge
         margin-right 10px

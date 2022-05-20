@@ -3,19 +3,7 @@
     <div class="reestr__actions"></div>
 
     <div class="reestr__table_filter">
-      <div class="reestr__table_search">
-        <base-search @search="searchText" class="reestr__table_search_text" />
-        <div class="reestr__table_search_wrapper">
-          <b-btn
-            :disabled="loading"
-            @click="resetFilter"
-            class="reestr__table_filter_btn"
-            variant="danger"
-            >Сбросить</b-btn
-          >
-        </div>
-      </div>
-      <div class="reestr__table_filter_btns"></div>
+      <table-filter v-model="model" :schema="schema" />
     </div>
 
     <b-table
@@ -54,44 +42,24 @@
       <template #cell(index)="{ index }">
         {{ index + 1 }}
       </template>
-
-      <template #cell(status)="{ item }">
-        <b-dropdown size="sm" class="m-2">
-          <b-dropdown-item-button
-            @click="setStatusPayment(item.id, statusPayment.id)"
-            v-for="statusPayment in statusPaymentList"
-            :key="statusPayment.id"
-          >
-            <div class="reestr__table_statusPayment">
-              <div
-                :style="{ background: statusPayment.color }"
-                class="reestr__table_statusPayment_badge"
-              />
-              {{ statusPayment.text }}
-            </div>
-          </b-dropdown-item-button>
-        </b-dropdown>
-      </template>
     </b-table>
 
-    <div class="reestr__table_functions">
-      <b-pagination
-        class="reestr__table_paginate"
-        v-model="page"
-        :total-rows="totalItems"
-        :per-page="filters.limit"
-        aria-controls="my-table"
-      />
-      <b-form-select v-model="limit" :options="pageOptions" />
-    </div>
+    <table-paginate
+      v-model="page"
+      :totalItems="totalItems"
+      @changeLimit="limit = $event"
+    />
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import { headers } from "./constants/tableHeaders";
+
 import PaginateMixin from "@/mixins/PaginateMixin";
 import TableSelectMixin from "@/mixins/TableSelectMixin";
+
+import { model, schema } from "./constants/filter.ts";
 
 export default Vue.extend({
   name: "PageClients",
@@ -101,48 +69,32 @@ export default Vue.extend({
       loading: false,
       headers,
       items: [],
-      pageOptions: [5, 10, 15, 50, 100],
-      search: {
-        text: null,
-      },
+      schema,
+      model,
     };
   },
 
   methods: {
-    resetFilter() {
-      this.makeNotification("Действие", "Фильтр сброшен", "success");
-      this.search = {
-        text: null,
-      };
-    },
+    async fetch() {
+      this.loading = true;
+      const search = { ...this.model, ...this.model.date };
+      delete search.date;
 
-    searchText(text) {
-      this.search.text = text;
-    },
-    rowColor(item, type) {
-      if (!item || type !== "row") return;
-      return { style: `background:${item.status_color}` };
-    },
-
-    initTable() {
-      this.items.forEach((el, index) => {
-        if (this.selected.find((selEl) => el.id == selEl.id)) {
-          this.$refs.selectableTable.selectRow(index);
-        }
-      });
+      const params = { ...search, ...this.filters };
+      //Тут запрос
     },
   },
   async mounted() {
-    // this.fetch();
+    this.fetch();
   },
 
   watch: {
     filters() {
-      // this.fetch();
+      this.fetch();
     },
-    search: {
+    model: {
       handler() {
-        // this.fetch();
+        this.fetch();
       },
       deep: true,
     },
@@ -167,11 +119,6 @@ export default Vue.extend({
   &__table
     width 100%
     max-height: 800px !important
-    &_functions
-      flexy(center,center)
-    &_paginate
-      margin 0px
-      margin-right 20px
     &_filter
       width 100%
       flexy(space-between,flex-start,wrap)
@@ -180,17 +127,6 @@ export default Vue.extend({
         margin-top 30px
       &_btn
         margin 0px 10px
-    &_search
-      flexy(flex-start,center,wrap)
-      &_wrapper
-        flexy(flex-start,center,wrap)
-      &_text
-        width 300px !important
-        margin-right 30px
-      &_company
-        width 250px !important
-      &_period
-        margin-left 50px !important
     &_statusPayment
       flexy(flex-start,center)
       &_badge
