@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import BaseLayout from "../layouts/BaseLayout.vue";
 
 import PageReestr from "../views/Reestr/PageReestr.vue";
+import PageClients from "../views/Clients/PageClients.vue";
 import NotFound from "../views/NotFound.vue";
 import PageDeveloping from "../views/PageDeveloping.vue";
 
@@ -49,6 +50,11 @@ const routes: Array<RouteConfig> = [
         path: "/forPayment",
         name: "forPayment",
         component: PageDeveloping,
+      },
+      {
+        path: "/clients",
+        name: "clients",
+        component: PageClients,
       },
     ],
   },

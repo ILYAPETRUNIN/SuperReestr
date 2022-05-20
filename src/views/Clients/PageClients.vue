@@ -1,16 +1,16 @@
 <template>
-  <div class="reestr">
-    <div class="reestr__actions"></div>
+  <div class="custom-table">
+    <div class="custom-table__actions"></div>
 
-    <div class="reestr__table_filter">
+    <div class="custom-table__filter">
       <table-filter v-model="model" :schema="schema" />
+      <div class="custom-table__filter_btns"></div>
     </div>
 
     <b-table
-      id="reestr-table"
       hover
       striped
-      class="reestr__table"
+      class="custom-table__table"
       selectable
       select-mode="multi"
       responsive
@@ -81,7 +81,11 @@ export default Vue.extend({
       delete search.date;
 
       const params = { ...search, ...this.filters };
-      //Тут запрос
+      //Тут будет запрос
+    },
+    rowColor(item, type) {
+      if (!item || type !== "row") return;
+      return { style: `background:${item.status_color}` };
     },
   },
   async mounted() {
@@ -105,44 +109,5 @@ export default Vue.extend({
 <style lang="stylus">
 @require '~@/assets/stylus/vars/variables';
 @require '~@/assets/stylus/mixins/mixins';
-.reestr
-  container(true)
-  flexy(center,center,nowrap,column)
-  max-width 95% !important
-  &__actions
-    width 100%
-    margin 20px 0px
-    flexy(flex-start,flex-start,wrap)
-  &__btn
-    flexy(center,center)
-    margin-right 10px
-  &__table
-    width 100%
-    max-height: 800px !important
-    &_filter
-      width 100%
-      flexy(space-between,flex-start,wrap)
-      margin 30px 0px
-      &_btns
-        margin-top 30px
-      &_btn
-        margin 0px 10px
-    &_statusPayment
-      flexy(flex-start,center)
-      &_badge
-        margin-right 10px
-        width 50px
-        height 25px
-  &__datepicker
-    width 150px !important
-  &__badge
-    background white !important
-    color black !important
-    margin-left 10px
-  &_btns
-     padding 30px
-  &__btn
-    &_badge
-      display:flex !important
-      flexy(center,center)
+@require '~@/assets/stylus/style/table.styl';
 </style>

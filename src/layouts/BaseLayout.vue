@@ -25,6 +25,7 @@ const links = [
   { name: "На оплату", to: "forPayment" },
   { name: "Договор п.", to: "contract1" },
   { name: "Договор к.", to: "contract2" },
+  { name: "Клиенты", to: "clients" },
 ];
 
 export default Vue.extend({
