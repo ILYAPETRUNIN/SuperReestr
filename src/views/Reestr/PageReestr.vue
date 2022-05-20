@@ -239,6 +239,7 @@ import PrintActions from "@/helpers/PrintActions";
 
 import ReestrApi from "@/services/api/ReestrApi";
 import PaginateMixin from "@/mixins/PaginateMixin";
+import TableSelectMixin from "@/mixins/TableSelectMixin";
 
 import FormatedDate from "@/helpers/DateFormat";
 
@@ -255,13 +256,12 @@ const nameFiles = [
 export default Vue.extend({
   name: "PageReestr",
   components: { CompanySelect, FilesModal, CreateDealModal },
-  mixins: [PaginateMixin],
+  mixins: [PaginateMixin, TableSelectMixin],
   data() {
     return {
       loading: false,
       headers,
       items: [],
-      selected: [],
       pageOptions: [5, 10, 15, 50, 100],
       modalFiles: {
         state: false,
@@ -283,42 +283,6 @@ export default Vue.extend({
   },
 
   methods: {
-    onRowSelected(items) {
-      this.selected = items;
-    },
-    selectAllRows() {
-      this.$refs.selectableTable.selectAllRows();
-      this.items.forEach((el) => {
-        const indexInArray = this.selected.findIndex(
-          (selEl) => el.id == selEl.id
-        );
-        if (indexInArray == -1) this.selectRow(el);
-      });
-    },
-    clearSelected() {
-      this.$refs.selectableTable.clearSelected();
-      this.items.forEach((el) => {
-        const indexInArray = this.selected.findIndex(
-          (selEl) => el.id == selEl.id
-        );
-        if (indexInArray != -1) this.unselectRow(indexInArray);
-      });
-    },
-    selectRow(item) {
-      this.selected.push(item);
-    },
-    unselectRow(index) {
-      this.selected.splice(index, 1);
-    },
-    toogleRow(item, index) {
-      const indexInArray = this.selected.findIndex((el) => el.id == item.id);
-      if (indexInArray != -1) this.unselectRow(indexInArray);
-      else this.selectRow(item);
-    },
-    toogleAll(state) {
-      if (state) this.selectAllRows();
-      else this.clearSelected();
-    },
     resetFilter() {
       this.makeNotification("Действие", "Фильтр сброшен", "success");
       this.search = {
@@ -475,13 +439,6 @@ export default Vue.extend({
             "danger"
           );
         });
-    },
-    initTable() {
-      this.items.forEach((el, index) => {
-        if (this.selected.find((selEl) => el.id == selEl.id)) {
-          this.$refs.selectableTable.selectRow(index);
-        }
-      });
     },
   },
   async mounted() {
