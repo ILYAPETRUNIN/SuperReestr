@@ -1,4 +1,4 @@
-.table
+.custom-table
    container(true)
    flexy(center,center,nowrap,column)
    max-width 95% !important
@@ -6,17 +6,17 @@
       width 100%
       margin 20px 0px
       flexy(flex-start,flex-start,wrap)
-   &__btn
-      flexy(center,center)
-      margin-right 10px
+      &_btn
+         flexy(center,center)
+         margin-right 10px
    &__table
       width 100%
       max-height: 800px !important
-      &_filter
-         width 100%
-         flexy(space-between,flex-start,wrap)
-         margin 30px 0px
-      &_btns
-         margin-top 30px
+   &__filter
+      width 100%
+      flexy(space-between,flex-start,wrap)
+      margin 30px 0px
       &_btn
          margin 0px 10px
+      &_btns
+         margin-top 30px

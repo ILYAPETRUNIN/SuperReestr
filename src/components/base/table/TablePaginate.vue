@@ -56,7 +56,7 @@ export default Vue.extend({
 @require '~@/assets/stylus/mixins/mixins';
 .paginate-table
     flexy(center,center)
-    &_paginate
+    &__paginate
       margin 0px
       margin-right 20px
 </style>

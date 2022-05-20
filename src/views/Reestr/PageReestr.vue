@@ -1,9 +1,9 @@
 <template>
-  <div class="table">
-    <div class="table__actions">
+  <div class="custom-table">
+    <div class="custom-table__actions">
       <b-btn
         @click="modalCreate = { state: true, type: 'future_payment' }"
-        class="table__btn"
+        class="custom-table__actions_btn"
         variant="primary"
       >
         <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
@@ -11,7 +11,7 @@
       </b-btn>
       <b-btn
         @click="modalCreate = { state: true, type: 'other_payment' }"
-        class="table__btn"
+        class="custom-table__actions_btn"
         variant="primary"
       >
         <b-icon size="sm" icon="plus-lg" aria-hidden="true" />
@@ -19,13 +19,13 @@
       </b-btn>
     </div>
 
-    <div class="table__table_filter">
+    <div class="custom-table__filter">
       <table-filter v-model="model" :schema="schema" />
-      <div class="table__table_btns">
+      <div class="custom-table__filter_btns">
         <b-btn
           :disabled="loading"
           @click="print"
-          class="reestr__table_filter_btn"
+          class="custom-table__filter_btn"
           pill
           variant="success"
           >На печать</b-btn
@@ -33,7 +33,7 @@
         <b-btn
           :disabled="loading"
           @click="formReestr"
-          class="reestr__table_filter_btn"
+          class="custom-table__filter_btn"
           pill
           variant="success"
           >Сформировать реестр</b-btn
@@ -45,7 +45,7 @@
       id="reestr-table"
       hover
       striped
-      class="table__table"
+      class="custom-table__table"
       selectable
       select-mode="multi"
       responsive
