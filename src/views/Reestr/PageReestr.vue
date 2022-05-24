@@ -192,6 +192,7 @@
       v-model="modalFiles.state"
     />
     <create-deal-modal
+      :loading="createLoading"
       :typePayment="modalCreate.type == 'future_payment' ? 'pre' : 'full'"
       @submit="createDeal"
       v-model="modalCreate.state"
@@ -225,6 +226,7 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
+      createLoading: false,
       headers,
       items: [],
       modalFiles: {
@@ -375,6 +377,7 @@ export default Vue.extend({
     },
 
     createDeal(params) {
+      this.createLoading = true;
       let form = new FormData();
 
       for (let key in params) {
@@ -396,7 +399,8 @@ export default Vue.extend({
             "Не удалось создать сделку",
             "danger"
           );
-        });
+        })
+        .finally(() => (this.createLoading = false));
     },
   },
   async mounted() {

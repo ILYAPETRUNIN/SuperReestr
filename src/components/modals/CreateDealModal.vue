@@ -25,6 +25,7 @@
     <b-form id="formCreateDeal" @submit="onSubmit" @reset="onReset">
       <b-form-group label="Номер сделки*" label-for="input-1">
         <b-form-input
+          :disabled="loading"
           type="number"
           id="input-1"
           v-model="form.deal"
@@ -35,6 +36,7 @@
 
       <b-form-group label="Компания перевозчика*" label-for="input-2">
         <b-form-input
+          :disabled="loading"
           id="input-2"
           v-model="form.company_name"
           placeholder="Введите компанию"
@@ -44,6 +46,7 @@
 
       <b-form-group label="Наша компания*" label-for="input-3">
         <b-form-input
+          :disabled="loading"
           id="input-3"
           v-model="form.own_company"
           placeholder="Введите компанию"
@@ -56,6 +59,7 @@
         label-for="input-4"
       >
         <b-form-input
+          :disabled="loading"
           type="number"
           id="input-4"
           v-model="form.pre_amount"
@@ -69,6 +73,7 @@
         label-for="input-5"
       >
         <b-form-datepicker
+          :disabled="loading"
           v-model="form.pre_amount_date"
           id="input-5"
           :date-format-options="{
@@ -84,6 +89,7 @@
 
       <b-form-group label="Счёт*" label-for="input-6">
         <b-form-input
+          :disabled="loading"
           id="input-6"
           v-model="form.account"
           placeholder="Введите номер счёта"
@@ -92,14 +98,27 @@
       </b-form-group>
 
       <b-form-group label="Документы" label-for="input-7">
-        <b-form-file id="input-7" v-model="form.documents" multiple />
+        <b-form-file
+          :disabled="loading"
+          id="input-7"
+          v-model="form.documents"
+          multiple
+        />
       </b-form-group>
 
       <div class="create-deal-modal__btns">
-        <b-button class="create-deal-modal__btn" type="submit" variant="primary"
-          >Создать</b-button
+        <b-button
+          :disabled="loading"
+          class="create-deal-modal__btn"
+          type="submit"
+          variant="primary"
         >
-        <b-button type="reset" variant="danger">Сбросить</b-button>
+          <b-spinner v-if="loading" small></b-spinner>
+          Создать
+        </b-button>
+        <b-button :disabled="loading" type="reset" variant="danger"
+          >Сбросить</b-button
+        >
       </div>
     </b-form>
   </b-modal>
@@ -123,6 +142,10 @@ export default {
   },
   props: {
     value: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       default: false,
     },
