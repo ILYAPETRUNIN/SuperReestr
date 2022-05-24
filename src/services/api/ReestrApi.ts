@@ -87,10 +87,14 @@ export default abstract class ReestrApi extends Api {
     });
   }
 
-  static createPayment(params: any = {}, type: string): Promise<any> {
+  static createPayment(form: FormData, type: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiService
-        .get(`${name}/${type}`, { params })
+        .post(`${name}/${type}`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then(({ data }) => resolve(data))
         .catch((error) => reject(error));
     });

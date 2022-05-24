@@ -22,7 +22,7 @@
       </div>
     </template>
 
-    <b-form @submit="onSubmit" @reset="onReset">
+    <b-form id="formCreateDeal" @submit="onSubmit" @reset="onReset">
       <b-form-group label="Номер сделки*" label-for="input-1">
         <b-form-input
           type="number"
@@ -91,6 +91,10 @@
         />
       </b-form-group>
 
+      <b-form-group label="Документы" label-for="input-7">
+        <b-form-file id="input-7" v-model="form.documents" multiple />
+      </b-form-group>
+
       <div class="create-deal-modal__btns">
         <b-button class="create-deal-modal__btn" type="submit" variant="primary"
           >Создать</b-button
@@ -113,6 +117,7 @@ export default {
         pre_amount: null,
         pre_amount_date: null,
         account: null,
+        documents: [],
       },
     };
   },

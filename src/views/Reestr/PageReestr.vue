@@ -75,7 +75,7 @@
       </template>
 
       <template #cell(index)="{ index }">
-        {{ index + 1 }}
+        {{ index + filters.offset + 1 }}
       </template>
 
       <template #cell(id)="{ value }">
@@ -168,10 +168,10 @@
             v-for="statusPayment in statusPaymentList"
             :key="statusPayment.id"
           >
-            <div class="reestr__table_statusPayment">
+            <div class="reestr__statusPayment">
               <div
                 :style="{ background: statusPayment.color }"
-                class="reestr__table_statusPayment_badge"
+                class="reestr__statusPayment_badge"
               />
               {{ statusPayment.text }}
             </div>
@@ -208,6 +208,7 @@ import CreateDealModal from "@/components/modals/CreateDealModal.vue";
 
 import FileAction from "@/helpers/FileAction";
 import PrintActions from "@/helpers/PrintActions";
+import getFormFile from "@/helpers/FormFile";
 
 import ReestrApi from "@/services/api/ReestrApi";
 import PaginateMixin from "@/mixins/PaginateMixin";
@@ -374,7 +375,16 @@ export default Vue.extend({
     },
 
     createDeal(params) {
-      ReestrApi.createPayment(params, this.modalCreate.type)
+      let form = new FormData();
+
+      for (let key in params) {
+        if (key != "documents") form.append(key, params[key]);
+        else {
+          params[key].forEach((file) => form.append("documents", file));
+        }
+      }
+
+      ReestrApi.createPayment(form, this.modalCreate.type)
         .then(() => {
           this.fetch();
           this.modalCreate.state = false;
@@ -414,7 +424,7 @@ export default Vue.extend({
 @require '~@/assets/stylus/style/table.styl';
 
 .reestr
-  &_statusPayment
+  &__statusPayment
       flexy(flex-start,center)
       &_badge
         margin-right 10px

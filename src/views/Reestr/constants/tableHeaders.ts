@@ -1,6 +1,7 @@
 import { TableHeaders } from "@/models/types";
 
 export const headers: TableHeaders[] = [
+  { key: "status", label: "" },
   { key: "selected", label: "" },
   { key: "index", label: "" },
   { key: "id", label: "#" },
@@ -20,5 +21,4 @@ export const headers: TableHeaders[] = [
   { key: "files_trn", label: "ТРН(2 стороны)" },
   { key: "files_other", label: "Иные документы" },
   { key: "files_order", label: "Скан квитка" },
-  { key: "status", label: "" },
 ];
