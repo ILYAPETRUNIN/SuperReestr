@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     openFile(file) {
-      FileAction.open(file.name);
+      FileAction.open(file.path);
     },
   },
 };

@@ -34,6 +34,14 @@ export class FileDeal implements FileConfig {
   public get date(): string {
     return FormatedDate.getDateRu(this.create);
   }
+
+  public get path(): string {
+    if (this.source == "logistic")
+      return "https://logist.datrans.ru/" + this.name;
+    else if (this.source == "perevoz")
+      return "http://perevoz.datrans.ru/documents/" + this.name;
+    return this.name;
+  }
 }
 
 export interface DealConfig {

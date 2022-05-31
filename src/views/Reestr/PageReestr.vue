@@ -252,7 +252,7 @@ export default Vue.extend({
       this.modalFiles.title = label;
     },
     openLastFile(files) {
-      FileAction.open(files[files.length - 1]);
+      FileAction.open(files[files.length - 1].path);
     },
     print() {
       let thead = [
