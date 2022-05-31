@@ -23,31 +23,34 @@
     </template>
 
     <b-form id="formCreateDeal" @submit="onSubmit" @reset="onReset">
-      <b-form-group label="Номер сделки*" label-for="input-1">
+      <b-form-group label="Номер сделки*" :label-for="`input-1-${_uid}`">
         <b-form-input
           :disabled="loading"
           type="number"
-          id="input-1"
+          :id="`input-1-${_uid}`"
           v-model="form.deal"
           placeholder="Введите номер сделки"
           required
         />
       </b-form-group>
 
-      <b-form-group label="Компания перевозчика*" label-for="input-2">
+      <b-form-group
+        label="Компания перевозчика*"
+        :label-for="`input-2-${_uid}`"
+      >
         <b-form-input
           :disabled="loading"
-          id="input-2"
+          :id="`input-2-${_uid}`"
           v-model="form.company_name"
           placeholder="Введите компанию"
           required
         />
       </b-form-group>
 
-      <b-form-group label="Наша компания*" label-for="input-3">
+      <b-form-group label="Наша компания*" :label-for="`input-3-${_uid}`">
         <b-form-input
           :disabled="loading"
-          id="input-3"
+          :id="`input-3-${_uid}`"
           v-model="form.own_company"
           placeholder="Введите компанию"
           required
@@ -56,12 +59,12 @@
 
       <b-form-group
         :label="`Сумма ${typePayment == 'pre' ? 'предоплаты' : 'оплаты'}*`"
-        label-for="input-4"
+        :label-for="`input-4-${_uid}`"
       >
         <b-form-input
           :disabled="loading"
           type="number"
-          id="input-4"
+          :id="`input-4-${_uid}`"
           v-model="form.pre_amount"
           placeholder="Введите сумму"
           required
@@ -70,12 +73,12 @@
 
       <b-form-group
         :label="`Дата ${typePayment == 'pre' ? 'предоплаты' : 'оплаты'}*`"
-        label-for="input-5"
+        :label-for="`input-5-${_uid}`"
       >
         <b-form-datepicker
           :disabled="loading"
           v-model="form.pre_amount_date"
-          id="input-5"
+          :id="`input-5-${_uid}`"
           :date-format-options="{
             year: 'numeric',
             month: 'numeric',
@@ -87,20 +90,20 @@
         />
       </b-form-group>
 
-      <b-form-group label="Счёт*" label-for="input-6">
+      <b-form-group label="Счёт*" :label-for="`input-6-${_uid}`">
         <b-form-input
           :disabled="loading"
-          id="input-6"
+          :id="`input-6-${_uid}`"
           v-model="form.account"
           placeholder="Введите номер счёта"
           required
         />
       </b-form-group>
 
-      <b-form-group label="Документы" label-for="input-7">
+      <b-form-group label="Документы" :label-for="`input-7-${_uid}`">
         <b-form-file
           :disabled="loading"
-          id="input-7"
+          :id="`input-7-${_uid}`"
           v-model="form.documents"
           multiple
         />

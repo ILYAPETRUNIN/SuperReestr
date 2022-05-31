@@ -128,15 +128,20 @@
         />
       </template>
 
-      <template #cell(comment)="{ value }">
+      <template #cell(comment)="{ value, item }">
         <b-button
+          @click="commentModal(item, 'create')"
           class="reestr__btn_badge"
           size="sm"
           variant="outline-dark"
           pill
         >
           <span>Комментировать</span>
-          <b-badge class="reestr__badge">{{ value.length }}</b-badge>
+          <b-badge
+            @click.stop="commentModal(item, 'show')"
+            class="reestr__badge"
+            >{{ value.length }}</b-badge
+          >
         </b-button>
       </template>
 
@@ -197,6 +202,11 @@
       @submit="createDeal"
       v-model="modalCreate.state"
     />
+    <comment-modal
+      :comments="modalComment.comments"
+      :type="modalComment.type"
+      v-model="modalComment.state"
+    />
   </div>
 </template>
 
@@ -206,10 +216,10 @@ import { headers } from "./constants/tableHeaders";
 
 import FilesModal from "@/components/modals/FilesModal.vue";
 import CreateDealModal from "@/components/modals/CreateDealModal.vue";
+import CommentModal from "@/components/modals/CommentModal.vue";
 
 import FileAction from "@/helpers/FileAction";
 import PrintActions from "@/helpers/PrintActions";
-import getFormFile from "@/helpers/FormFile";
 
 import ReestrApi from "@/services/api/ReestrApi";
 import PaginateMixin from "@/mixins/PaginateMixin";
@@ -221,7 +231,7 @@ import nameFiles from "./constants/nameFiles.ts";
 
 export default Vue.extend({
   name: "PageReestr",
-  components: { FilesModal, CreateDealModal },
+  components: { FilesModal, CreateDealModal, CommentModal },
   mixins: [PaginateMixin, TableSelectMixin],
   data() {
     return {
@@ -237,6 +247,11 @@ export default Vue.extend({
       modalCreate: {
         state: false,
         type: "future_payment",
+      },
+      modalComment: {
+        state: false,
+        comments: [],
+        type: "create",
       },
       nameFiles,
       schema,
@@ -401,6 +416,9 @@ export default Vue.extend({
           );
         })
         .finally(() => (this.createLoading = false));
+    },
+    commentModal(item, type) {
+      this.modalComment = { state: true, comments: item.comment, type };
     },
   },
   async mounted() {

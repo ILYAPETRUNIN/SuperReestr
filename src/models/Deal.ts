@@ -11,6 +11,20 @@ export interface FileConfig {
   type: string;
 }
 
+export interface CommentConfig {
+  text: string;
+  date: Date;
+}
+
+export class Comment {
+  text: string;
+  date: Date;
+  constructor(args: CommentConfig) {
+    this.text = args.text;
+    this.date = args.date;
+  }
+}
+
 export class FileDeal implements FileConfig {
   approved: boolean;
   create: string;
@@ -45,7 +59,7 @@ export class FileDeal implements FileConfig {
 }
 
 export interface DealConfig {
-  comment: Array<any>;
+  comment: Array<Comment>;
   company_name: string;
   deal: number;
   files_act: Array<FileDeal>;
@@ -69,7 +83,7 @@ export interface DealConfig {
 }
 
 export default class Deal implements DealConfig {
-  comment: Array<any>;
+  comment: Array<Comment>;
   company_name: string;
   deal: number;
   files_act: Array<FileDeal>;
