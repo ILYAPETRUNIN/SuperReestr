@@ -400,7 +400,7 @@ export default Vue.extend({
       for (let key in params) {
         if (key != "documents") form.append(key, params[key]);
         else {
-          params[key].forEach((file) => form.append("documents", file));
+          params[key].forEach((file) => form.append("documents[]", file));
         }
       }
 
