@@ -203,6 +203,7 @@
       v-model="modalCreate.state"
     />
     <comment-modal
+      @submit="createComment"
       :comments="modalComment.comments"
       :type="modalComment.type"
       v-model="modalComment.state"
@@ -252,6 +253,7 @@ export default Vue.extend({
         state: false,
         comments: [],
         type: "create",
+        id: null,
       },
       nameFiles,
       schema,
@@ -418,7 +420,27 @@ export default Vue.extend({
         .finally(() => (this.createLoading = false));
     },
     commentModal(item, type) {
-      this.modalComment = { state: true, comments: item.comment, type };
+      this.modalComment = {
+        state: true,
+        id: item.id,
+        comments: item.comment,
+        type,
+      };
+    },
+    createComment({ messages }) {
+      ReestrApi.createComment({ registry_id: this.modalComment.id, messages })
+        .then(() => {
+          this.fetch();
+          this.modalComment.state = false;
+          this.makeNotification("Действие", "Комментарий добавлен", "success");
+        })
+        .catch(() => {
+          this.makeNotification(
+            "Ошибка",
+            "Не удалось добавить комментарий",
+            "danger"
+          );
+        });
     },
   },
   async mounted() {

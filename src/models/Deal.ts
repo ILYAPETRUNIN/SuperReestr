@@ -11,17 +11,34 @@ export interface FileConfig {
   type: string;
 }
 
-export interface CommentConfig {
-  text: string;
-  date: Date;
+export interface CommentCreate {
+  registry_id: number;
+  messages: string;
 }
 
-export class Comment {
-  text: string;
-  date: Date;
+export interface CommentConfig {
+  created_at: string;
+  id: number;
+  messages: string;
+  page: string;
+  registry_id: number;
+  updated_at: string;
+}
+
+export class Comment implements CommentConfig {
+  created_at: string;
+  id: number;
+  messages: string;
+  page: string;
+  registry_id: number;
+  updated_at: string;
   constructor(args: CommentConfig) {
-    this.text = args.text;
-    this.date = args.date;
+    this.created_at = args.created_at;
+    this.id = args.id;
+    this.messages = args.messages;
+    this.page = args.page;
+    this.registry_id = args.registry_id;
+    this.updated_at = args.updated_at;
   }
 }
 

@@ -10,4 +10,19 @@ export default abstract class FormatedDate {
     }
     return "";
   }
+
+  public static getDateAndTimeRu(date: string): string {
+    if (date) {
+      const currDate = new Date(date);
+      return currDate.toLocaleString("ru", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      });
+    }
+    return "";
+  }
 }

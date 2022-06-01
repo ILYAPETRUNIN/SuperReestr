@@ -1,5 +1,6 @@
 import Api from "@/services/api/BaseApiService";
 import { IList } from "@/models/types";
+import { CommentCreate } from "@/models//Deal";
 
 import Deal, { DealConfig } from "@/models/Deal";
 import StatusPayment, { StatusPaymentConfig } from "@/models/StatusPayment";
@@ -96,6 +97,15 @@ export default abstract class ReestrApi extends Api {
           },
         })
         .then(({ data }) => resolve(data))
+        .catch((error) => reject(error));
+    });
+  }
+
+  static createComment(data: CommentCreate): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .post(`${name}/messages`, { ...data })
+        .then((data) => resolve(data))
         .catch((error) => reject(error));
     });
   }

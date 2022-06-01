@@ -1,9 +1,11 @@
 <template>
   <div :class="{ 'comment-card_full': isFull }" class="comment-card">
-    <h4 class="comment-card__date">{{ comment.date }}</h4>
+    <h4 class="comment-card__date">{{ formatDate(comment.created_at) }}</h4>
     <div class="comment-card__card">
       <div class="comment-card__text">
-        {{ isFull ? comment.text : `${comment.text.slice(0, 120)}.....` }}
+        {{
+          isFull ? comment.messages : `${comment.messages.slice(0, 120)}.....`
+        }}
       </div>
     </div>
     <div class="comment-card__action">
@@ -15,6 +17,8 @@
 </template>
 
 <script>
+import FormatedDate from "@/helpers/DateFormat";
+
 export default {
   name: "CommentCard",
   data() {
@@ -23,14 +27,21 @@ export default {
     };
   },
   props: {
-    comment: Object,
-    default: () => {
-      return {};
+    comment: {
+      default: () => {
+        return {};
+      },
     },
+  },
+  mounted() {
+    console.log(this.comment);
   },
   methods: {
     toogle() {
       this.isFull = !this.isFull;
+    },
+    formatDate(date) {
+      return FormatedDate.getDateAndTimeRu(date);
     },
   },
 };

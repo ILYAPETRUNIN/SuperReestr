@@ -24,12 +24,12 @@
       </div>
     </template>
 
-    <b-form v-if="isCreate" id="formCreateDeal" @submit="onSubmit">
+    <b-form v-if="isCreate" :id="`form-${_uid}`" @submit.prevent="onSubmit">
       <b-form-group label="Комментарий*" :label-for="`input-1${_uid}`">
         <b-form-textarea
           :disabled="loading"
           :id="`input-1${_uid}`"
-          v-model="form.text"
+          v-model="form.messages"
           placeholder="Введите комментарий"
           required
           rows="8"
@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       form: {
-        text: null,
+        messages: null,
       },
     };
   },
@@ -99,8 +99,7 @@ export default {
     },
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
+    onSubmit() {
       this.$emit("submit", this.form);
     },
   },
