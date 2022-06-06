@@ -22,33 +22,48 @@ const routes: Array<RouteConfig> = [
         component: PageReestr,
       },
       {
-        path: "/developing",
+        path: "developing",
         name: "developing",
         component: PageDeveloping,
       },
       {
-        path: "/contract1",
+        path: "http://perevoz.datrans.ru:8443/",
+        beforeEnter(to, from, next) {
+          window.location.href = "http://perevoz.datrans.ru:8443";
+        },
         name: "contract1",
         component: PageDeveloping,
       },
       {
-        path: "/contract2",
+        path: "http://perevoz.datrans.ru:8443/client",
+        beforeEnter(to, from, next) {
+          window.location.href = "http://perevoz.datrans.ru:8443/client";
+        },
         name: "contract2",
         component: PageDeveloping,
       },
       {
-        path: "/scans",
+        path: "http://perevoz.datrans.ru/#main-tab",
+        beforeEnter(to, from, next) {
+          window.location.href = "http://perevoz.datrans.ru/#main-tab";
+        },
         name: "scans",
         component: PageDeveloping,
       },
       {
-        path: "/originals",
+        path: "http://perevoz.datrans.ru/#tab-original",
+        beforeEnter(to, from, next) {
+          window.location.href = "http://perevoz.datrans.ru/#tab-original";
+        },
         name: "originals",
         component: PageDeveloping,
       },
       {
-        path: "/forPayment",
+        path: "http://perevoz.datrans.ru/#tab-paid",
         name: "forPayment",
+        beforeEnter(to, from, next) {
+          window.location.href = "http://perevoz.datrans.ru/#tab-paid";
+        },
         component: PageDeveloping,
       },
       {

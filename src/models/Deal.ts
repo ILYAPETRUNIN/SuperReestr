@@ -71,6 +71,8 @@ export class FileDeal implements FileConfig {
       return "https://logist.datrans.ru/" + this.name;
     else if (this.source == "perevoz")
       return "http://perevoz.datrans.ru/documents/" + this.name;
+    else if (this.source == "reestr")
+      return process.env.VUE_APP_API_BASE_PATH + "/" + this.name;
     return this.name;
   }
 }
