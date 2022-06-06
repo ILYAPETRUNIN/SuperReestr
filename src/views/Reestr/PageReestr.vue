@@ -31,7 +31,6 @@
           >На печать</b-btn
         >
         <b-btn
-          :disabled="loading"
           @click="formReestr"
           class="custom-table__filter_btn"
           pill
@@ -305,9 +304,10 @@ export default Vue.extend({
     formReestr() {
       if (this.selected.length > 0) {
         ReestrApi.sendToPayment(this.selected.map((item) => item.id))
-          .then(() =>
-            this.makeNotification("Действие", "Реестр сформирован", "success")
-          )
+          .then(() => {
+            this.fetch();
+            this.makeNotification("Действие", "Реестр сформирован", "success");
+          })
           .catch(() => {
             this.makeNotification(
               "Ошибка",
