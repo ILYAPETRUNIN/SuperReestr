@@ -10,7 +10,7 @@
     <template #modal-header="{ close }">
       <div class="comment-modal__header">
         <div class="comment-modal__header_title">
-          {{ isCreate ? "Комментировать" : "Смотреть комментарии" }}
+          {{ isCreate && isView ? "Комментировать" : "Смотреть комментарии" }}
         </div>
         <b-button
           pill
@@ -24,7 +24,11 @@
       </div>
     </template>
 
-    <b-form v-if="isCreate" :id="`form-${_uid}`" @submit.prevent="onSubmit">
+    <b-form
+      v-if="isCreate && isView"
+      :id="`form-${_uid}`"
+      @submit.prevent="onSubmit"
+    >
       <b-form-group label="Комментарий*" :label-for="`input-1${_uid}`">
         <b-form-textarea
           :disabled="loading"
@@ -88,6 +92,9 @@ export default {
   computed: {
     isCreate() {
       return this.type == "create";
+    },
+    isView() {
+      return this.$cookies.get("page_view");
     },
     inputVal: {
       get() {

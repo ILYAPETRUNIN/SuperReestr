@@ -1,8 +1,10 @@
 import Vue from "vue";
+
 import VueRouter, { RouteConfig } from "vue-router";
 import BaseLayout from "../layouts/BaseLayout.vue";
 
 import PageReestr from "../views/Reestr/PageReestr.vue";
+import PageReestrView from "../views/Reestr/PageReestrView.vue";
 import PageClients from "../views/Clients/PageClients.vue";
 import NotFound from "../views/NotFound.vue";
 import PageDeveloping from "../views/PageDeveloping.vue";
@@ -14,12 +16,17 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "home",
     component: BaseLayout,
-    redirect: { name: "reestr" },
+    redirect: { name: "reestr_view" },
     children: [
       {
         path: "/reestr",
         name: "reestr",
         component: PageReestr,
+      },
+      {
+        path: "/reestr_view",
+        name: "reestr_view",
+        component: PageReestrView,
       },
       {
         path: "developing",
@@ -28,7 +35,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "http://perevoz.datrans.ru:8443/",
-        beforeEnter(to, from, next) {
+        beforeEnter() {
           window.location.href = "http://perevoz.datrans.ru:8443";
         },
         name: "contract1",
@@ -36,7 +43,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "http://perevoz.datrans.ru:8443/client",
-        beforeEnter(to, from, next) {
+        beforeEnter() {
           window.location.href = "http://perevoz.datrans.ru:8443/client";
         },
         name: "contract2",
@@ -44,7 +51,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "http://perevoz.datrans.ru/#main-tab",
-        beforeEnter(to, from, next) {
+        beforeEnter() {
           window.location.href = "http://perevoz.datrans.ru/#main-tab";
         },
         name: "scans",
@@ -52,7 +59,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "http://perevoz.datrans.ru/#tab-original",
-        beforeEnter(to, from, next) {
+        beforeEnter() {
           window.location.href = "http://perevoz.datrans.ru/#tab-original";
         },
         name: "originals",
@@ -61,7 +68,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "http://perevoz.datrans.ru/#tab-paid",
         name: "forPayment",
-        beforeEnter(to, from, next) {
+        beforeEnter() {
           window.location.href = "http://perevoz.datrans.ru/#tab-paid";
         },
         component: PageDeveloping,
