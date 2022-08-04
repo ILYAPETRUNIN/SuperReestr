@@ -30,3 +30,11 @@ export interface ChangePaymentConfig {
   type: TypePayment;
   sum: number;
 }
+
+export interface ReestrOneC {
+  id: number;
+}
+
+export interface ReestrClose {
+  id: number;
+}

@@ -28,15 +28,18 @@
           class="custom-table__filter_btn"
           pill
           variant="success"
-          >На печать</b-btn
-        >
+          >На печать
+        </b-btn>
         <b-btn
           @click="formReestr"
           class="custom-table__filter_btn"
           pill
           variant="success"
-          >Сформировать реестр</b-btn
-        >
+          >Сформировать реестр
+        </b-btn>
+      </div>
+      <div class="">
+        <p class="text-lg-left text-info">{{ getSumm() }} руб.</p>
       </div>
     </div>
 
@@ -139,30 +142,54 @@
           <b-badge
             @click.stop="commentModal(item, 'show')"
             class="reestr__badge"
-            >{{ value.length }}</b-badge
-          >
+            >{{ value.length }}
+          </b-badge>
         </b-button>
       </template>
 
       <template
-        v-slot:[`cell(${name})`]="{ value, field }"
+        v-slot:[`cell(${name})`]="{ value, field, item }"
         v-for="name in nameFiles"
       >
-        <b-button
-          @click="openLastFile(value)"
-          :key="name"
-          class="reestr__btn_badge"
-          size="sm"
-          variant="outline-dark"
-        >
-          <span>посмотреть</span>
-          <b-badge
-            @click.stop="showModal(field.label, value)"
-            class="reestr__badge"
-            variant="info"
-            >{{ value.length }}
-          </b-badge>
-        </b-button>
+        <div class="btn-group" :key="genNameOpen(name)">
+          <b-button
+            @click="openLastFile(value)"
+            :key="name"
+            class="reestr__btn_badge"
+            size="sm"
+            variant="outline-dark"
+          >
+            <span>посмотреть</span>
+            <b-badge
+              @click.stop="showModal(field.label, value)"
+              class="reestr__badge"
+              variant="info"
+              >{{ value.length }}
+            </b-badge>
+          </b-button>
+          <b-button
+            @click="addFile(field, item)"
+            :key="genName(name)"
+            class="btn btn-default"
+            variant="success"
+            size="sm"
+          >
+            <b-icon
+              class="base-addable-file__btn_icon"
+              size="sm"
+              icon="cloud-upload"
+              aria-hidden="true"
+            />
+            <input
+              @change="sendFiles(item, field)"
+              :id="genNameInput(name, item.id)"
+              type="file"
+              :name="genNameInput(name, item.id)"
+              :multiple="true"
+              style="display: none"
+            />
+          </b-button>
+        </div>
       </template>
 
       <template #cell(status)="{ item }">
@@ -217,6 +244,7 @@ import { headers } from "./constants/tableHeaders";
 import FilesModal from "@/components/modals/FilesModal.vue";
 import CreateDealModal from "@/components/modals/CreateDealModal.vue";
 import CommentModal from "@/components/modals/CommentModal.vue";
+import AddFileModal from "@/components/modals/AddFileModal.vue";
 
 import FileAction from "@/helpers/FileAction";
 import PrintActions from "@/helpers/PrintActions";
@@ -262,6 +290,12 @@ export default Vue.extend({
   },
 
   methods: {
+    genName(name) {
+      return name + "-add-file";
+    },
+    genNameInput(name, id) {
+      return name + "-add-file-input_" + id;
+    },
     showModal(label, files) {
       this.modalFiles.state = true;
       this.modalFiles.files = files;
@@ -376,6 +410,10 @@ export default Vue.extend({
           );
         });
     },
+    addFile(field, value) {
+      let id_input = this.genNameInput(field.key, value.id);
+      document.getElementById(id_input).click();
+    },
     changePayment(id, type, sum) {
       ReestrApi.changePayment({ id, type, sum })
         .then(() => {
@@ -392,7 +430,6 @@ export default Vue.extend({
           );
         });
     },
-
     createDeal(params) {
       this.createLoading = true;
       let form = new FormData();
@@ -427,6 +464,30 @@ export default Vue.extend({
         type,
       };
     },
+    sendFiles(item, field) {
+      let id_input = this.genNameInput(field.key, item.id);
+      let input = document.getElementById(id_input);
+      let files = input.files;
+      console.log(id_input);
+      let form = new FormData();
+      if (typeof files != "undefined") {
+        form.append("id", item.id);
+        form.append("type", field.key);
+        Array.from(files).forEach((file) => form.append("documents[]", file));
+        ReestrApi.addFiles(form)
+          .then(() => {
+            this.fetch();
+            this.makeNotification("Действие", "Файлы добавлены", "success");
+          })
+          .catch(() => {
+            this.makeNotification(
+              "Ошибка",
+              "Не удалось добавить файлы",
+              "danger"
+            );
+          });
+      }
+    },
     createComment({ messages }) {
       ReestrApi.createComment({ registry_id: this.modalComment.id, messages })
         .then(() => {
@@ -441,6 +502,9 @@ export default Vue.extend({
             "danger"
           );
         });
+    },
+    genNameOpen(item) {
+      return item + "-page-reestr-open-file";
     },
   },
   async mounted() {
@@ -469,21 +533,30 @@ export default Vue.extend({
 
 .reestr
   &__statusPayment
-      flexy(flex-start,center)
-      &_badge
-        margin-right 10px
-        width 50px
-        height 25px
+    flexy(flex-start, center)
+
+    &_badge
+      margin-right 10px
+      width 50px
+      height 25px
+
   &__datepicker
     width 150px !important
+
   &__badge
     background white !important
     color black !important
     margin-left 10px
+
   &_btns
-     padding 30px
+    padding 30px
+
   &__btn
     &_badge
-      display:flex !important
-      flexy(center,center)
+      display: flex !important
+      flexy(center, center)
+
+  &__addable-file
+    display: flex !important
+    flexy(center, center)
 </style>

@@ -72,8 +72,9 @@
           }"
           locale="ru"
           :value="value"
-          :placeholder="item"
+          placeholder=""
           :disabled="true"
+          :data-item="item"
         />
       </template>
 
@@ -87,8 +88,9 @@
           }"
           locale="ru"
           :value="value"
-          :placeholder="item"
+          placeholder=""
           :disabled="true"
+          :data-item="item"
         />
       </template>
 

@@ -39,7 +39,7 @@ export default {
     ReestrApi.getCompanies()
       .then((items) => {
         this.options = items.map((item) => {
-          return { value: item.OwnCompany, text: item.OwnCompany };
+          return { value: item.id, text: item.OwnCompany };
         });
         this.options.unshift({
           value: null,
