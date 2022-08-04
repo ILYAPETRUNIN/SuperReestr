@@ -29,7 +29,7 @@ interface IPaginate {
 export default Vue.extend<IData, IMethods, IComputed>({
   data: function () {
     return {
-      limit: 5,
+      limit: 50,
       offset: 0,
       totalItems: null,
       page: 1,

@@ -71,6 +71,8 @@ export class FileDeal implements FileConfig {
       return "https://logist.datrans.ru/" + this.name;
     else if (this.source == "perevoz")
       return "http://perevoz.datrans.ru/documents/" + this.name;
+    else if (this.source == "reestr")
+      return process.env.VUE_APP_API_BASE_PATH + "/" + this.name;
     return this.name;
   }
 }
@@ -159,5 +161,56 @@ export class DealList {
   deals: Array<Deal>;
   constructor(deals: Array<Deal>) {
     this.deals = deals.map((item) => new Deal(item));
+  }
+}
+
+export interface ClientInvoiceConfig {
+  invoice_id: number;
+  deal_id: number;
+  company_own: string;
+  company: string;
+  date_bill: any;
+  route: string;
+  sum_paid: number;
+  inn: number;
+  list_uslug: any;
+  files_act: Array<FileDeal>;
+  files_upd: Array<FileDeal>;
+  files_invoice: Array<FileDeal>;
+  files_account: Array<FileDeal>;
+  files_other: Array<FileDeal>;
+}
+
+export class ClientInvoice implements ClientInvoiceConfig {
+  invoice_id: number;
+  deal_id: number;
+  company_own: string;
+  company: string;
+  date_bill: any;
+  route: string;
+  sum_paid: number;
+  inn: number;
+  list_uslug: any;
+  files_act: Array<FileDeal>;
+  files_upd: Array<FileDeal>;
+  files_invoice: Array<FileDeal>;
+  files_account: Array<FileDeal>;
+  files_other: Array<FileDeal>;
+
+  constructor(args: ClientInvoiceConfig) {
+    this.invoice_id = args.invoice_id;
+    this.deal_id = args.deal_id;
+    this.company_own = args.company_own;
+    this.company = args.company;
+    this.date_bill = args.date_bill;
+    this.route = args.route;
+    this.sum_paid = args.sum_paid;
+    this.inn = args.inn;
+    this.list_uslug = args.list_uslug;
+    this.files_act = args.files_act.map((file) => new FileDeal(file));
+    this.files_upd = args.files_upd.map((file) => new FileDeal(file));
+    this.files_invoice = args.files_invoice.map((file) => new FileDeal(file));
+    this.files_account = args.files_account.map((file) => new FileDeal(file));
+    this.files_other = args.files_other.map((file) => new FileDeal(file));
   }
 }

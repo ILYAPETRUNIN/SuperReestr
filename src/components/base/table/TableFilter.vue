@@ -1,5 +1,5 @@
 <template>
-  <b-form class="filter">
+  <b-form class="filter" @submit.prevent="">
     <base-search
       v-if="text"
       v-model="inputVal.text"

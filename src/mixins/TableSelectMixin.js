@@ -2,6 +2,7 @@ export default {
   data: function () {
     return {
       selected: [],
+      summamount: 0,
     };
   },
 
@@ -24,10 +25,16 @@ export default {
         if (indexInArray != -1) this.unselectRow(indexInArray);
       });
     },
+    getSumm() {
+      return this.summamount;
+    },
     selectRow(item) {
       this.selected.push(item);
+      this.selectSummAmount(item);
     },
     unselectRow(index) {
+      const item_select = this.selected[index];
+      this.unselectSummAmount(item_select);
       this.selected.splice(index, 1);
     },
     toogleRow(item, index) {
@@ -38,6 +45,20 @@ export default {
     toogleAll(state) {
       if (state) this.selectAllRows();
       else this.clearSelected();
+    },
+    selectSummAmount(item) {
+      if (item.summ_amount == null) {
+        this.summamount += item.pre_amount;
+      } else {
+        this.summamount += item.summ_amount;
+      }
+    },
+    unselectSummAmount(item) {
+      if (item.summ_amount == null) {
+        this.summamount -= item.pre_amount;
+      } else {
+        this.summamount -= item.summ_amount;
+      }
     },
     initTable() {
       this.items.forEach((el, index) => {

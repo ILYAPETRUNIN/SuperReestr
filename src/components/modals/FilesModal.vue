@@ -37,7 +37,12 @@
             size="sm"
             >Открыть</b-btn
           >
-          <b-button class="files-modal__item_btn" size="sm" variant="danger">
+          <b-button
+            v-if="isView()"
+            class="files-modal__item_btn"
+            size="sm"
+            variant="danger"
+          >
             <b-icon icon="trash" aria-label="Help"></b-icon>
           </b-button>
         </div>
@@ -79,6 +84,9 @@ export default {
   methods: {
     openFile(file) {
       FileAction.open(file.path);
+    },
+    isView() {
+      return this.$cookies.get("page_view");
     },
   },
 };

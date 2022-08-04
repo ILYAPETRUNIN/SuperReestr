@@ -1,9 +1,7 @@
 export default [
-  "files_act",
   "files_invoice",
-  "files_check",
-  "files_ticket",
-  "files_trn",
+  "files_act",
+  "files_account",
+  "files_upd",
   "files_other",
-  "files_order",
 ];

@@ -15,13 +15,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-
+import Cookies from "vue-cookies";
 import DealInfo from "@/components/other/DealInfo.vue";
+
+Vue.use(Cookies);
+let page_view = Vue.$cookies.get("page_view");
 
 const links = [
   { name: "Сканы", to: "scans" },
   { name: "Оригинал", to: "originals" },
-  { name: "Реестр оплат", to: "reestr" },
+  { name: "Реестр оплат(просмотр)", to: "reestr_view" },
   { name: "На оплату", to: "forPayment" },
   { name: "Договор п.", to: "contract1" },
   { name: "Договор к.", to: "contract2" },
@@ -39,6 +42,11 @@ export default Vue.extend({
   },
   mounted() {
     setTimeout(() => {
+      if (page_view) {
+        links[2].name = "Реестр оплат";
+        links[2].to = "reestr";
+      }
+
       this.tabIndex = 2;
     }, 5);
   },

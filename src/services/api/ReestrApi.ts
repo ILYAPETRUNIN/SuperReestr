@@ -5,6 +5,7 @@ import { CommentCreate } from "@/models//Deal";
 import Deal, { DealConfig } from "@/models/Deal";
 import StatusPayment, { StatusPaymentConfig } from "@/models/StatusPayment";
 import Company, { CompanyConfig } from "@/models/Company";
+
 import {
   ReestrGetConfig,
   ChangeDatePaymentConfig,
@@ -13,6 +14,7 @@ import {
 } from "../types";
 
 const name = "/payment_registry";
+
 export default abstract class ReestrApi extends Api {
   static getList(params: ReestrGetConfig = {}): Promise<IList<Deal>> {
     return new Promise((resolve, reject) => {
@@ -100,7 +102,18 @@ export default abstract class ReestrApi extends Api {
         .catch((error) => reject(error));
     });
   }
-
+  static addFiles(form: FormData): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .post(`${name}/add_files`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(({ data }) => resolve(data))
+        .catch((error) => reject(error));
+    });
+  }
   static createComment(data: CommentCreate): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiService

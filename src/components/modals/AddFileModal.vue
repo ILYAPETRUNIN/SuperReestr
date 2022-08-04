@@ -5,18 +5,16 @@
     centered
     v-model="inputVal"
     hide-footer
-    class="comment-modal"
+    class="add-file-modal"
   >
     <template #modal-header="{ close }">
-      <div class="comment-modal__header">
-        <div class="comment-modal__header_title">
-          {{ isCreate && isView ? "Комментировать" : "Смотреть комментарии" }}
-        </div>
+      <div class="add-file-modal__header">
+        <div class="add-file-modal__header_title">Добавить файл</div>
         <b-button
           pill
           @click="close()"
           variant="danger"
-          class="comment-modal__item_btn"
+          class="create-deal-modal__item_btn"
           size="sm"
         >
           <b-icon scale="2" icon="x-circle" aria-label="Help"></b-icon>
@@ -24,47 +22,47 @@
       </div>
     </template>
 
-    <b-form
-      v-if="isCreate && isView"
-      :id="`form-${_uid}`"
-      @submit.prevent="onSubmit"
-    >
-      <b-form-group label="Комментарий*" :label-for="`input-1${_uid}`">
-        <b-form-textarea
+    <b-form id="formCreateDeal" @submit="onSubmit" @reset="onReset">
+      <b-form-group label="Документы" :label-for="`input-7-${_uid}`">
+        <b-form-file
           :disabled="loading"
-          :id="`input-1${_uid}`"
-          v-model="form.messages"
-          placeholder="Введите комментарий"
-          required
-          rows="8"
+          :id="`input-7-${_uid}`"
+          v-model="form.documents"
+          multiple
         />
       </b-form-group>
-      <div class="comment-modal__btns">
+
+      <div class="create-deal-modal__btns">
         <b-button
           :disabled="loading"
-          class="comment-modal__btn"
+          class="create-deal-modal__btn"
           type="submit"
           variant="primary"
         >
           <b-spinner v-if="loading" small></b-spinner>
           Создать
         </b-button>
+        <b-button :disabled="loading" type="reset" variant="danger"
+          >Сбросить</b-button
+        >
       </div>
     </b-form>
-
-    <comments-block :comments="comments" v-else />
   </b-modal>
 </template>
 
 <script>
-import CommentsBlock from "@/components/other/Comments/CommentsBlock.vue";
 export default {
-  name: "CommentModal",
-  components: { CommentsBlock },
+  name: "CreateDealModal",
   data() {
     return {
       form: {
-        messages: null,
+        deal: null,
+        company_name: null,
+        own_company: null,
+        pre_amount: null,
+        pre_amount_date: null,
+        account: null,
+        documents: [],
       },
     };
   },
@@ -77,25 +75,15 @@ export default {
       type: Boolean,
       default: false,
     },
-    type: {
+    typePayment: {
       type: String,
-      default: "create",
+      default: "pre",
       validator(value) {
-        return ["create", "show"].includes(value);
+        return ["pre", "full"].includes(value);
       },
-    },
-    comments: {
-      type: Array,
-      default: () => [],
     },
   },
   computed: {
-    isCreate() {
-      return this.type == "create";
-    },
-    isView() {
-      return this.$cookies.get("page_view");
-    },
     inputVal: {
       get() {
         return this.value;
@@ -106,8 +94,16 @@ export default {
     },
   },
   methods: {
-    onSubmit() {
+    onSubmit(event) {
+      event.preventDefault();
       this.$emit("submit", this.form);
+    },
+    onReset(event) {
+      event.preventDefault();
+
+      for (let key in this.form) {
+        this.form[key] = null;
+      }
     },
   },
 };
@@ -116,7 +112,7 @@ export default {
 <style lang="stylus">
 @require '~@/assets/stylus/vars/variables';
 @require '~@/assets/stylus/mixins/mixins';
-.comment-modal
+.create-deal-modal
   &__header
     width 100%
     flexy(space-between)

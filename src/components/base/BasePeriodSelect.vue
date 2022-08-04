@@ -10,7 +10,7 @@
           day: 'numeric',
         }"
         locale="ru"
-        v-model="inputVal.date_to"
+        v-model="inputVal.date_from"
         placeholder="От"
       />
     </div>
@@ -25,7 +25,7 @@
           day: 'numeric',
         }"
         locale="ru"
-        v-model="inputVal.date_from"
+        v-model="inputVal.date_to"
         placeholder="До"
       />
     </div>
