@@ -21,7 +21,7 @@ import ReestrApi from "@/services/api/ReestrApi";
 // ];
 
 export default {
-  name: "CompanySelect",
+  name: "CompanySelectClients",
   data() {
     return {
       loading: false,
