@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import ReestrApi from "@/services/api/ReestrApi";
+import ClientReestrApi from "@/services/api/ClientReestrApi";
 
 // const options = [
 //   { value: "", text: "Выберите компанию", disabled: true },
@@ -36,10 +36,10 @@ export default {
   },
   mounted() {
     this.loading = true;
-    ReestrApi.getCompanies()
+    ClientReestrApi.getCompanies()
       .then((items) => {
         this.options = items.map((item) => {
-          return { value: item.OwnCompany, text: item.OwnCompany };
+          return { value: item.id, text: item.OwnCompany };
         });
         this.options.unshift({
           value: null,

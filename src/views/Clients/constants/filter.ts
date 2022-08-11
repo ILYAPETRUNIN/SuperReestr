@@ -1,6 +1,6 @@
 export const schema = [
   {
-    component: "company-select",
+    component: "company-select-client",
     model: "company",
   },
   {

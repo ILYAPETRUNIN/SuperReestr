@@ -33,7 +33,6 @@ export interface ClientInvoiceConfig {
   company_own: any;
   company: any;
   date_bill: any;
-  route: string;
   sum_paid: string;
   form_of_payment: string;
   inn: number;
@@ -55,7 +54,6 @@ export default class ClientInvoice implements ClientInvoiceConfig {
   company_own: any;
   company: any;
   date_bill: any;
-  route: string;
   sum_paid: string;
   form_of_payment: string;
   inn: number;
@@ -76,7 +74,6 @@ export default class ClientInvoice implements ClientInvoiceConfig {
     this.company_own = args.company_own;
     this.company = args.company;
     this.date_bill = FormatedDate.getDateRu(args.date_bill);
-    this.route = args.route;
     this.sum_paid = args.currency.replace("#", args.sum_paid);
     this.form_of_payment = args.form_of_payment;
     this.inn = args.inn;

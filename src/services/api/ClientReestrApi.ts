@@ -3,6 +3,7 @@ import { IList } from "@/models/types";
 
 import ClientInvoice, { ClientInvoiceConfig } from "@/models/ClientInvoice";
 import { ReestrGetConfig, ReestrOneC, ReestrClose } from "../types";
+import Company, { CompanyConfig } from "@/models/Company";
 
 const clients_name = "/clients_registry";
 
@@ -19,6 +20,7 @@ export default abstract class ClientReestrApi extends Api {
         .catch((error) => reject(error));
     });
   }
+
   static clientSearch(
     params: ReestrGetConfig = {}
   ): Promise<IList<ClientInvoice>> {
@@ -32,6 +34,17 @@ export default abstract class ClientReestrApi extends Api {
               (cat: ClientInvoiceConfig) => new ClientInvoice(cat)
             ),
           })
+        )
+        .catch((error) => reject(error));
+    });
+  }
+
+  static getCompanies(): Promise<Array<Company>> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${clients_name}/get_company`)
+        .then(({ data: catList }) =>
+          resolve(catList.map((cat: CompanyConfig) => new Company(cat)))
         )
         .catch((error) => reject(error));
     });

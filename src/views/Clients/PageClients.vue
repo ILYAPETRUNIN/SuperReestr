@@ -1,12 +1,10 @@
 <template>
   <div class="custom-table">
     <div class="custom-table__actions"></div>
-
     <div class="custom-table__filter">
-      <table-filter v-model="model" :schema="schema" />
+      <table-filter-client v-model="model" :schema="schema" />
       <div class="custom-table__filter_btns"></div>
     </div>
-
     <b-table
       hover
       striped
@@ -55,6 +53,10 @@
       </template>
 
       <template #cell(company_own)="{ value }">
+        {{ value.title }}
+      </template>
+
+      <template #cell(company)="{ value }">
         {{ value.title }}
       </template>
 
