@@ -179,6 +179,22 @@ export default Vue.extend({
         })
         .catch(console.error);
     },
+
+    async fetch_not_reload() {
+      this.loading = false;
+      const search = { ...this.model, ...this.model.date };
+      delete search.date;
+      const params = { ...search, ...this.filters };
+      ClientReestrApi.clientSearch(params)
+        .then((res) => {
+          this.totalItems = res.size;
+          this.items = res.res;
+          this.loading = false;
+          setTimeout(this.initTable.bind(this), 100);
+        })
+        .catch(console.error);
+    },
+
     format_currency(fmt_str, price) {
       console.log(fmt_str);
       if (typeof fmt_str.currency == "undefined") return price;
@@ -198,7 +214,7 @@ export default Vue.extend({
     get_one_c(id) {
       ClientReestrApi.setStatusOneC({ id: id })
         .then(() => {
-          this.fetch();
+          this.fetch_not_reload();
           this.makeNotification("Действие", "Счет выставлен в 1С", "success");
         })
         .catch(console.error);
@@ -206,7 +222,7 @@ export default Vue.extend({
     get_close(id) {
       ClientReestrApi.setStatusClose({ id: id })
         .then((res) => {
-          this.fetch();
+          this.fetch_not_reload();
           this.makeNotification("Действие", "Счет закрыт", "success");
         })
         .catch(console.error);
@@ -246,7 +262,7 @@ export default Vue.extend({
         Array.from(files).forEach((file) => form.append("documents[]", file));
         ClientReestrApi.addFiles(form)
           .then(() => {
-            this.fetch();
+            this.fetch_not_reload();
             this.makeNotification("Действие", "Файлы добавлены", "success");
           })
           .catch(() => {
@@ -266,11 +282,11 @@ export default Vue.extend({
 
   watch: {
     filters() {
-      this.fetch();
+      this.fetch_not_reload();
     },
     model: {
       handler() {
-        this.fetch();
+        this.fetch_not_reload();
       },
       deep: true,
     },
