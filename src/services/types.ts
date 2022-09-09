@@ -35,6 +35,15 @@ export interface ReestrOneC {
   id: number;
 }
 
+export interface ReestrDefect {
+  id: number;
+}
+
+export interface ReestrUploadAt {
+  id: number;
+  date_upload?: string;
+}
+
 export interface ReestrClose {
   id: number;
 }

@@ -105,6 +105,27 @@
         </div>
       </template>
 
+      <template #cell(real_upload_at)="{ item }">
+        <b-form-datepicker
+          @input="addRealDate(item.invoice_id, $event)"
+          class="reestr__datepicker"
+          :date-format-options="{
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          }"
+          locale="ru"
+          :value="value"
+          placeholder=""
+        />
+      </template>
+
+      <template #cell(defect)="{ item }">
+        <b-button :active="item.defect" @click="toggle_defect(item.invoice_id)">
+          <b> Да </b>
+        </b-button>
+      </template>
+
       <template #cell(one_c)="{ item }">
         <b-button :active="!item.one_c" @click="get_one_c(item.invoice_id)">
           Отправить в 1С
@@ -224,6 +245,32 @@ export default Vue.extend({
         .then((res) => {
           this.fetch_not_reload();
           this.makeNotification("Действие", "Счет закрыт", "success");
+        })
+        .catch(console.error);
+    },
+
+    toggle_defect(id) {
+      ClientReestrApi.setStatusDefect({ id: id })
+        .then((res) => {
+          this.fetch_not_reload();
+          this.makeNotification(
+            "Действие",
+            "Установлен статус 'дефектный'",
+            "success"
+          );
+        })
+        .catch(console.error);
+    },
+
+    addRealDate(id, date) {
+      ClientReestrApi.setRealUploadAt({ id: id, date_upload: date })
+        .then((res) => {
+          this.fetch_not_reload();
+          this.makeNotification(
+            "Действие",
+            "Установлен статус 'дефектный'",
+            "success"
+          );
         })
         .catch(console.error);
     },

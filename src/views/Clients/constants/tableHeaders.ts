@@ -5,6 +5,7 @@ export const headers: TableHeaders[] = [
   { key: "index", label: "#" },
   { key: "invoice_id", label: "ИД счета" },
   { key: "date_bill", label: "Дата выставления счета" },
+  { key: "real_upload_at", label: "Дата реальной выгрузки" },
   { key: "deal_id", label: "ИД сделки" },
   { key: "company_own", label: "Наша компания" },
   { key: "company", label: "Компания клиента" },
@@ -17,6 +18,7 @@ export const headers: TableHeaders[] = [
   { key: "files_account", label: "СЧФ" },
   { key: "files_upd", label: "УДП" },
   { key: "files_other", label: "Иные документы" },
+  { key: "defect", label: "Дефект документов" },
   { key: "one_c", label: "Выставлен в 1С" },
   { key: "close", label: "Закрыт" },
 ];

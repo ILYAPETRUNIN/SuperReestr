@@ -46,6 +46,8 @@ export interface ClientInvoiceConfig {
   state_invoice: string;
   one_c: boolean;
   close: boolean;
+  defect: boolean;
+  real_upload_at: any;
 }
 
 export default class ClientInvoice implements ClientInvoiceConfig {
@@ -67,6 +69,8 @@ export default class ClientInvoice implements ClientInvoiceConfig {
   state_invoice: string;
   one_c: boolean;
   close: boolean;
+  defect: boolean;
+  real_upload_at: any;
 
   constructor(args: ClientInvoiceConfig) {
     this.invoice_id = args.invoice_id;
@@ -87,6 +91,8 @@ export default class ClientInvoice implements ClientInvoiceConfig {
     this.state_invoice = args.state_invoice;
     this.one_c = args.one_c;
     this.close = args.close;
+    this.defect = args.defect;
+    this.real_upload_at = args.real_upload_at;
   }
 
   public get date(): string {

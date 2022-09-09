@@ -2,7 +2,13 @@ import Api from "@/services/api/BaseApiService";
 import { IList } from "@/models/types";
 
 import ClientInvoice, { ClientInvoiceConfig } from "@/models/ClientInvoice";
-import { ReestrGetConfig, ReestrOneC, ReestrClose } from "../types";
+import {
+  ReestrGetConfig,
+  ReestrOneC,
+  ReestrClose,
+  ReestrDefect,
+  ReestrUploadAt,
+} from "../types";
 import Company, { CompanyConfig } from "@/models/Company";
 
 const clients_name = "/clients_registry";
@@ -54,6 +60,28 @@ export default abstract class ClientReestrApi extends Api {
     return new Promise((resolve, reject) => {
       this.apiService
         .get(`${clients_name}/set_status_one_c`, { params })
+        .then((data) => resolve(data))
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  }
+
+  static setStatusDefect(params: ReestrDefect): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .get(`${clients_name}/set_status_defect`, { params })
+        .then((data) => resolve(data))
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  }
+
+  static setRealUploadAt(params: ReestrUploadAt): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiService
+        .post(`${clients_name}/set_status_real_upload`, { params })
         .then((data) => resolve(data))
         .catch((error) => {
           console.log(error);
