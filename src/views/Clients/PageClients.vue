@@ -121,7 +121,11 @@
       </template>
 
       <template #cell(defect)="{ item }">
-        <b-button :active="item.defect" @click="toggle_defect(item.invoice_id)">
+        <b-button
+          :active="!item.defect"
+          :style="colorButtonDefect(item.defect)"
+          @click="toggle_defect(item.invoice_id)"
+        >
           <b> Да </b>
         </b-button>
       </template>
@@ -297,6 +301,13 @@ export default Vue.extend({
     },
     genNameOpen(item) {
       return "button-open-file-" + item;
+    },
+    colorButtonDefect(flag) {
+      if (flag == 1) {
+        return "{ backgroung-color: gray }";
+      } else {
+        return "{ backgroung-color: green }";
+      }
     },
     sendFiles(item, field) {
       let id_input = this.genNameInput(field.key, item.invoice_id);
