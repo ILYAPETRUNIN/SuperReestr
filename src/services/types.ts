@@ -41,7 +41,7 @@ export interface ReestrDefect {
 
 export interface ReestrUploadAt {
   id: number;
-  date_upload?: string;
+  real_upload_at?: string;
 }
 
 export interface ReestrClose {

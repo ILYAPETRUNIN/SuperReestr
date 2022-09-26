@@ -37,6 +37,10 @@
         <b-checkbox :checked="rowSelected" disabled />
       </template>
 
+      <template #cell(invoice_id)="{ value }">
+        <a :href="gen_link_invoice(value)">{{ value }}</a>
+      </template>
+
       <template #cell(index)="{ index }">
         {{ index + 1 }}
       </template>
@@ -47,7 +51,8 @@
             v-for="uslug in value"
             :key="getNameUslug(uslug.name, item.id)"
           >
-            {{ uslug.name }} - {{ format_currency(item, uslug.price) }}
+            {{ uslug.name }} - {{ format_currency(item, uslug.price) }} X
+            {{ uslug.quantity }}
           </b-list-group-item>
         </b-list-group>
       </template>
@@ -106,24 +111,15 @@
       </template>
 
       <template #cell(real_upload_at)="{ item }">
-        <b-form-datepicker
-          @input="addRealDate(item.invoice_id, $event)"
-          class="reestr__datepicker"
-          :date-format-options="{
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          }"
-          locale="ru"
-          :value="value"
-          placeholder=""
-        />
+        <b>
+          {{ item.real_upload_at }}
+        </b>
       </template>
 
       <template #cell(defect)="{ item }">
         <b-button
           :active="!item.defect"
-          :style="colorButtonDefect(item.defect)"
+          :variant="colorButtonDefect(item.defect)"
           @click="toggle_defect(item.invoice_id)"
         >
           <b> Да </b>
@@ -131,13 +127,21 @@
       </template>
 
       <template #cell(one_c)="{ item }">
-        <b-button :active="!item.one_c" @click="get_one_c(item.invoice_id)">
+        <b-button
+          :active="!item.one_c"
+          @click="get_one_c(item.invoice_id)"
+          :variant="colorButtonDefect(item.one_c)"
+        >
           Отправить в 1С
         </b-button>
       </template>
 
       <template #cell(close)="{ item }">
-        <b-button :active="!item.close" @click="get_close(item.invoice_id)">
+        <b-button
+          :active="!item.close"
+          @click="get_close(item.invoice_id)"
+          :variant="colorButtonDefect(item.close)"
+        >
           Закрыть
         </b-button>
       </template>
@@ -219,7 +223,9 @@ export default Vue.extend({
         })
         .catch(console.error);
     },
-
+    gen_link_invoice(id) {
+      return "https://b24.datrans.ru/crm/type/31/details/" + id + "/";
+    },
     format_currency(fmt_str, price) {
       console.log(fmt_str);
       if (typeof fmt_str.currency == "undefined") return price;
@@ -303,10 +309,10 @@ export default Vue.extend({
       return "button-open-file-" + item;
     },
     colorButtonDefect(flag) {
-      if (flag == 1) {
-        return "{ backgroung-color: gray }";
+      if (flag == 0) {
+        return "primary";
       } else {
-        return "{ backgroung-color: green }";
+        return "none";
       }
     },
     sendFiles(item, field) {
