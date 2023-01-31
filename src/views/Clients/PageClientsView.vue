@@ -44,9 +44,7 @@
       <template #cell(index)="{ index }">
         {{ index + 1 }}
       </template>
-      <template #cell(agreement)="{ value }">
-        {{ format_argeement(value) }}
-      </template>
+
       <template #cell(list_uslug)="{ value, item }">
         <b-list-group>
           <b-list-group-item
@@ -88,7 +86,6 @@
           </b-button>
 
           <b-button
-            v-if="get_status_view()"
             @click="addFile(field, item)"
             :key="genName(name)"
             class="btn btn-default"
@@ -119,7 +116,7 @@
         </b>
       </template>
 
-      <template v-if="get_status_view()" #cell(defect)="{ item }">
+      <template #cell(defect)="{ item }">
         <b-button
           :active="!item.defect"
           :variant="colorButtonDefect(item.defect)"
@@ -129,7 +126,7 @@
         </b-button>
       </template>
 
-      <template v-if="get_status_view()" #cell(one_c)="{ item }">
+      <template #cell(one_c)="{ item }">
         <b-button
           :active="!item.one_c"
           @click="get_one_c(item.invoice_id)"
@@ -139,7 +136,7 @@
         </b-button>
       </template>
 
-      <template v-if="get_status_view()" #cell(close)="{ item }">
+      <template #cell(close)="{ item }">
         <b-button
           :active="!item.close"
           @click="get_close(item.invoice_id)"
@@ -173,7 +170,6 @@ import ClientReestrApi from "@/services/api/ClientReestrApi";
 import { model, schema } from "./constants/filter.ts";
 import nameFiles from "./constants/nameFiles";
 import FileAction from "@/helpers/FileAction";
-import Cookies from "vue-cookies";
 
 export default Vue.extend({
   name: "PageClients",
@@ -186,7 +182,6 @@ export default Vue.extend({
       headers,
       items: [],
       schema,
-      page_view_local: false,
       model,
       nameFiles,
       modalFiles: {
@@ -236,13 +231,6 @@ export default Vue.extend({
       if (typeof fmt_str.currency == "undefined") return price;
       else return fmt_str.currency.replace("#", price);
     },
-    format_argeement(value) {
-      if (value) {
-        return "Да";
-      } else {
-        return "Нет";
-      }
-    },
     rowColor(item, type) {
       if (!item || type !== "row") return;
       // || type !== "row"
@@ -270,11 +258,7 @@ export default Vue.extend({
         })
         .catch(console.error);
     },
-    get_status_view() {
-      Vue.use(Cookies);
-      this.page_view_local = Vue.$cookies.get("page_view");
-      return this.page_view_local;
-    },
+
     toggle_defect(id) {
       ClientReestrApi.setStatusDefect({ id: id })
         .then((res) => {

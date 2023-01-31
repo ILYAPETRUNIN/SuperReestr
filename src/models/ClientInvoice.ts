@@ -33,7 +33,6 @@ export interface ClientInvoiceConfig {
   company_own: any;
   company: any;
   date_bill: any;
-  route: string;
   sum_paid: string;
   form_of_payment: string;
   inn: number;
@@ -45,8 +44,11 @@ export interface ClientInvoiceConfig {
   files_account: Array<FileClient>;
   files_other: Array<FileClient>;
   state_invoice: string;
+  agreement: boolean;
   one_c: boolean;
   close: boolean;
+  defect: boolean;
+  real_upload_at: any;
 }
 
 export default class ClientInvoice implements ClientInvoiceConfig {
@@ -55,7 +57,6 @@ export default class ClientInvoice implements ClientInvoiceConfig {
   company_own: any;
   company: any;
   date_bill: any;
-  route: string;
   sum_paid: string;
   form_of_payment: string;
   inn: number;
@@ -67,8 +68,11 @@ export default class ClientInvoice implements ClientInvoiceConfig {
   files_account: Array<FileClient>;
   files_other: Array<FileClient>;
   state_invoice: string;
+  agreement: boolean;
   one_c: boolean;
   close: boolean;
+  defect: boolean;
+  real_upload_at: any;
 
   constructor(args: ClientInvoiceConfig) {
     this.invoice_id = args.invoice_id;
@@ -76,11 +80,11 @@ export default class ClientInvoice implements ClientInvoiceConfig {
     this.company_own = args.company_own;
     this.company = args.company;
     this.date_bill = FormatedDate.getDateRu(args.date_bill);
-    this.route = args.route;
     this.sum_paid = args.currency.replace("#", args.sum_paid);
     this.form_of_payment = args.form_of_payment;
     this.inn = args.inn;
     this.currency = args.currency;
+    this.agreement = args.agreement;
     this.list_uslug = args.list_uslug;
     this.files_act = args.files_act.map((file) => new FileClient(file));
     this.files_upd = args.files_upd.map((file) => new FileClient(file));
@@ -90,6 +94,8 @@ export default class ClientInvoice implements ClientInvoiceConfig {
     this.state_invoice = args.state_invoice;
     this.one_c = args.one_c;
     this.close = args.close;
+    this.defect = args.defect;
+    this.real_upload_at = args.real_upload_at;
   }
 
   public get date(): string {

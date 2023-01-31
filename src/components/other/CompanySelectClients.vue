@@ -1,16 +1,24 @@
 <template>
-  <b-form-select
-    :disabled="loading || options.length == 0"
-    label-field="Компания"
-    class="company-select"
-    size="lg"
-    v-model="inputVal"
-    :options="options"
-  />
+  <b-container size="lg">
+    <b-row>
+      <b-col>
+        <b-form-select
+          :disabled="loading || options.length == 0"
+          label-field="Компания"
+          class="company-select"
+          size="lg"
+          v-model="inputVal"
+          :options="options"
+        />
+      </b-col>
+      <b-col>
+        <b-form-select v-model="defectVal" :options="options_defect" />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
-
 <script>
-import ReestrApi from "@/services/api/ReestrApi";
+import ClientReestrApi from "@/services/api/ClientReestrApi";
 
 // const options = [
 //   { value: "", text: "Выберите компанию", disabled: true },
@@ -26,6 +34,11 @@ export default {
     return {
       loading: false,
       options: [],
+      defect: false,
+      options_defect: [
+        { value: true, text: "Только дефектные" },
+        { value: false, text: "Все записи" },
+      ],
     };
   },
   props: {
@@ -36,10 +49,10 @@ export default {
   },
   mounted() {
     this.loading = true;
-    ReestrApi.getCompanies()
+    ClientReestrApi.getCompanies()
       .then((items) => {
         this.options = items.map((item) => {
-          return { value: item.OwnCompany, text: item.OwnCompany };
+          return { value: item.id, text: item.OwnCompany };
         });
         this.options.unshift({
           value: null,
@@ -55,6 +68,15 @@ export default {
     inputVal: {
       get() {
         return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      },
+    },
+
+    defectVal: {
+      get() {
+        return this.defect;
       },
       set(value) {
         this.$emit("input", value);
