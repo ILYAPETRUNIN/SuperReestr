@@ -44,6 +44,7 @@ export interface ClientInvoiceConfig {
   files_account: Array<FileClient>;
   files_other: Array<FileClient>;
   state_invoice: string;
+  agreement: boolean;
   one_c: boolean;
   close: boolean;
   defect: boolean;
@@ -67,6 +68,7 @@ export default class ClientInvoice implements ClientInvoiceConfig {
   files_account: Array<FileClient>;
   files_other: Array<FileClient>;
   state_invoice: string;
+  agreement: boolean;
   one_c: boolean;
   close: boolean;
   defect: boolean;
@@ -82,6 +84,7 @@ export default class ClientInvoice implements ClientInvoiceConfig {
     this.form_of_payment = args.form_of_payment;
     this.inn = args.inn;
     this.currency = args.currency;
+    this.agreement = args.agreement;
     this.list_uslug = args.list_uslug;
     this.files_act = args.files_act.map((file) => new FileClient(file));
     this.files_upd = args.files_upd.map((file) => new FileClient(file));

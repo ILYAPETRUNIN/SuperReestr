@@ -9,6 +9,7 @@ export const headers: TableHeaders[] = [
   { key: "deal_id", label: "ИД сделки" },
   { key: "company_own", label: "Наша компания" },
   { key: "company", label: "Компания клиента" },
+  { key: "agreement", label: "Заключен договор?" },
   { key: "inn", label: "ИНН" },
   { key: "sum_paid", label: "Сумма счёта" },
   { key: "form_of_payment", label: "Форма оплаты" },

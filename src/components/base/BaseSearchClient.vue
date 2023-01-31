@@ -7,6 +7,7 @@
       v-model="invoice_id"
       placeholder="ID Счета"
     />
+    <b-form-select v-model="defect" :options="options_defect" />
     <b-input-group-append>
       <b-btn :disabled="disabled" @click="search" variant="primary"
         >Найти</b-btn
@@ -28,6 +29,11 @@ export default {
       text: "",
       inn: "",
       invoice_id: "",
+      defect: false,
+      options_defect: [
+        { value: true, text: "Только дефектные" },
+        { value: false, text: "Все записи" },
+      ],
     };
   },
   methods: {
@@ -36,6 +42,7 @@ export default {
         text: this.text,
         inn: this.inn,
         invoice_id: this.invoice_id,
+        defect: this.defect,
       });
     },
   },

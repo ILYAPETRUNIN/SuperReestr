@@ -1,14 +1,22 @@
 <template>
-  <b-form-select
-    :disabled="loading || options.length == 0"
-    label-field="Компания"
-    class="company-select"
-    size="lg"
-    v-model="inputVal"
-    :options="options"
-  />
+  <b-container size="lg">
+    <b-row>
+      <b-col>
+        <b-form-select
+          :disabled="loading || options.length == 0"
+          label-field="Компания"
+          class="company-select"
+          size="lg"
+          v-model="inputVal"
+          :options="options"
+        />
+      </b-col>
+      <b-col>
+        <b-form-select v-model="defectVal" :options="options_defect" />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
-
 <script>
 import ClientReestrApi from "@/services/api/ClientReestrApi";
 
@@ -26,6 +34,11 @@ export default {
     return {
       loading: false,
       options: [],
+      defect: false,
+      options_defect: [
+        { value: true, text: "Только дефектные" },
+        { value: false, text: "Все записи" },
+      ],
     };
   },
   props: {
@@ -55,6 +68,15 @@ export default {
     inputVal: {
       get() {
         return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      },
+    },
+
+    defectVal: {
+      get() {
+        return this.defect;
       },
       set(value) {
         this.$emit("input", value);
